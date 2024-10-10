@@ -5,9 +5,12 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  Alert,
+  PermissionsAndroid,
+  Platform,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -16,6 +19,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 
 import {
   Colors,
@@ -24,6 +28,42 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+
+async function requestPermissions() {
+  if (Platform.OS === 'ios') {
+    const bluetoothPermission = await request(PERMISSIONS.IOS.BLUETOOTH);
+    const locationPermission = await request(
+      PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+    );
+
+    if (
+      bluetoothPermission === RESULTS.GRANTED &&
+      locationPermission === RESULTS.GRANTED
+    ) {
+      console.log('iOS BLE 및 위치 권한 허용됨');
+    } else {
+      console.log('iOS 권한 거부됨');
+    }
+  } else if (Platform.OS === 'android') {
+    const bluetoothScan = await request(PERMISSIONS.ANDROID.BLUETOOTH_SCAN);
+    const bluetoothConnect = await request(
+      PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
+    );
+    const locationPermission = await request(
+      PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+    );
+
+    if (
+      bluetoothScan === RESULTS.GRANTED &&
+      bluetoothConnect === RESULTS.GRANTED &&
+      locationPermission === RESULTS.GRANTED
+    ) {
+      console.log('Android BLE 및 위치 권한 허용됨');
+    } else {
+      console.log('Android 권한 거부됨');
+    }
+  }
+}
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -61,6 +101,10 @@ function App(): React.JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  useEffect(() => {
+    requestPermissions();
+  }, []);
 
   return (
     <SafeAreaView style={backgroundStyle}>

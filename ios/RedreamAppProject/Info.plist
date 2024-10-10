@@ -48,5 +48,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Bluetooth는 근처 BLE 기기와 통신하기 위해 필요합니다.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Bluetooth는 근처 BLE 기기와 통신하기 위해 필요합니다.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>BLE 기기를 검색하기 위해 위치 정보가 필요합니다.</string>
 </dict>
 </plist>
