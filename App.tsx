@@ -125,7 +125,7 @@ function App(): React.JSX.Element {
   const enableBluetooth = () => {
     if (Platform.OS === 'ios') {
       // iOS에서는 설정 페이지로 이동
-      Linking.openURL('App-Prefs:root=Bluetooth'); // iOS 설정 페이지로 이동
+      Linking.openURL('app-settings://bluetooth/RedreamApp'); // iOS 설정 페이지로 이동
     } else {
       // Android에서는 BLEService로 블루투스를 켤 수 있음
       BLEService.enable()
