@@ -172,6 +172,31 @@ function App(): React.JSX.Element {
       });
   };
 
+  // 블루투스 기기와 연결을 끊는 함수
+  const disconnectFromDevice = () => {
+    if (connectedDevice) {
+      BLEService.manager
+        .cancelDeviceConnection(connectedDevice.id)
+        .then(() => {
+          setConnectedDevice(null); // 연결 해제 시 연결된 기기 상태 초기화
+          Toast.show({
+            type: 'success',
+            text1: 'Disconnected',
+            text2: 'Device connection has been terminated.',
+          });
+          console.log('Device disconnected');
+        })
+        .catch(error => {
+          console.error('Failed to disconnect device:', error);
+          Toast.show({
+            type: 'error',
+            text1: 'Disconnection Failed',
+            text2: 'Failed to disconnect the device.',
+          });
+        });
+    }
+  };
+
   // 스캔이 끝난 후 버튼 클릭 시 처리
   const handleRestartScan = () => {
     setScanFinished(false);
@@ -205,6 +230,8 @@ function App(): React.JSX.Element {
                 device={item}
                 index={index}
                 connectToDevice={connectToDevice}
+                disconnectFromDevice={disconnectFromDevice}
+                isConnected={connectedDevice?.id === item.id}
               />
             )}
             refreshControl={
