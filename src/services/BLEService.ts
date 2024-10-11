@@ -108,7 +108,7 @@ class BLEServiceInstance {
       .startDeviceScan(UUIDs, {legacyScan}, (error, device) => {
         if (error) {
           this.onError(error);
-          console.error(error.message);
+          console.log(error.message);
           this.manager.stopDeviceScan();
           return;
         }
@@ -515,7 +515,7 @@ class BLEServiceInstance {
       text1: 'Error',
       text2: error,
     });
-    console.error(error);
+    console.log(error);
   };
 
   showSuccessToast = (info: string) => {
