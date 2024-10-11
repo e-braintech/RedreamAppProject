@@ -173,34 +173,37 @@ function App(): React.JSX.Element {
   };
 
   // 블루투스 기기와 연결을 끊는 함수
-  const disconnectFromDevice = () => {
-    if (connectedDevice) {
-      BLEService.manager
-        .cancelDeviceConnection(connectedDevice.id)
-        .then(() => {
-          setConnectedDevice(null); // 연결 해제 시 연결된 기기 상태 초기화
-          Toast.show({
-            type: 'success',
-            text1: 'Disconnected',
-            text2: 'Device connection has been terminated.',
-          });
-          console.log('Device disconnected');
-        })
-        .catch(error => {
-          console.error('Failed to disconnect device:', error);
-          Toast.show({
-            type: 'error',
-            text1: 'Disconnection Failed',
-            text2: 'Failed to disconnect the device.',
-          });
+  const disconnectFromDevice = (device: Device) => {
+    return BLEService.manager
+      .cancelDeviceConnection(device.id)
+      .then(() => {
+        setConnectedDevice(null); // 연결 해제 시 연결된 기기 상태 초기화
+        Toast.show({
+          type: 'success',
+          text1: 'Disconnected',
+          text2: `Disconnected from ${device.name}`,
         });
-    }
+        console.log('Device disconnected:', device);
+      })
+      .catch(error => {
+        console.error('Failed to disconnect device:', error);
+        Toast.show({
+          type: 'error',
+          text1: 'Disconnection Failed',
+          text2: `Failed to disconnect from ${device.name}`,
+        });
+      });
   };
 
-  // 스캔이 끝난 후 버튼 클릭 시 처리
+  // 스캔 버튼 클릭 시 처리: 연결된 기기 해제 후 스캔
   const handleRestartScan = () => {
-    setScanFinished(false);
-    startDeviceScan(); // 다시 스캔 시작
+    if (connectedDevice) {
+      disconnectFromDevice(connectedDevice).then(() => {
+        startDeviceScan(); // 연결 해제 후 스캔 시작
+      });
+    } else {
+      startDeviceScan(); // 연결된 기기가 없으면 바로 스캔 시작
+    }
   };
 
   // RefreshControl에서 스캔 재시작
