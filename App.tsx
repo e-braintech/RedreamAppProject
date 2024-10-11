@@ -64,6 +64,7 @@ function App(): React.JSX.Element {
   const [isScanning, setIsScanning] = useState<boolean>(false); // 스캔 중 여부를 저장하는 상태
   const [scanFinished, setScanFinished] = useState<boolean>(false); // 스캔이 끝났는지 여부를 저장하는 상태
   const [refreshing, setRefreshing] = useState<boolean>(false); // RefreshControl 상태
+  const [connectedDevice, setConnectedDevice] = useState<Device | null>(null); // 연결된 기기 상태
 
   useEffect(() => {
     requestPermissions();
@@ -104,7 +105,7 @@ function App(): React.JSX.Element {
         setDevices(prevDevices => {
           // 기기가 중복되지 않도록 필터링
           if (!prevDevices.find(d => d.id === device.id)) {
-            console.log('Device found:', device); // 새로운 기기 발견시 로그 출력
+            // console.log('Device found:', device); // 새로운 기기 발견시 로그 출력
             return [...prevDevices, device];
           }
           return prevDevices;
@@ -148,6 +149,29 @@ function App(): React.JSX.Element {
     }
   };
 
+  // 블루투스 기기와 연결하는 함수
+  const connectToDevice = (device: Device) => {
+    BLEService.manager
+      .connectToDevice(device.id)
+      .then(connectedDevice => {
+        setConnectedDevice(connectedDevice); // 연결된 기기 상태 저장
+        Toast.show({
+          type: 'success',
+          text1: 'Connected',
+          text2: `Connected to ${connectedDevice.name}`,
+        });
+        console.log('Device connected:', connectedDevice);
+      })
+      .catch(error => {
+        console.error('Failed to connect to device:', error);
+        Toast.show({
+          type: 'error',
+          text1: 'Connection Failed',
+          text2: `Failed to connect to ${device.name}`,
+        });
+      });
+  };
+
   // 스캔이 끝난 후 버튼 클릭 시 처리
   const handleRestartScan = () => {
     setScanFinished(false);
@@ -177,7 +201,11 @@ function App(): React.JSX.Element {
             data={devices}
             keyExtractor={item => item.id}
             renderItem={({item, index}) => (
-              <BluetoothRenderItem device={item} index={index} />
+              <BluetoothRenderItem
+                device={item}
+                index={index}
+                connectToDevice={connectToDevice}
+              />
             )}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
