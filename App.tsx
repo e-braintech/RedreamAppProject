@@ -11,6 +11,7 @@ import {
   FlatList,
   Linking,
   Platform,
+  RefreshControl,
   SafeAreaView,
   Text,
 } from 'react-native';
@@ -62,6 +63,7 @@ function App(): React.JSX.Element {
   const [devices, setDevices] = useState<Device[]>([]); // 스캔된 BLE 기기들을 저장하는 상태, Device[] 타입으로 정의
   const [isScanning, setIsScanning] = useState<boolean>(false); // 스캔 중 여부를 저장하는 상태
   const [scanFinished, setScanFinished] = useState<boolean>(false); // 스캔이 끝났는지 여부를 저장하는 상태
+  const [refreshing, setRefreshing] = useState<boolean>(false); // RefreshControl 상태
 
   useEffect(() => {
     requestPermissions();
@@ -152,9 +154,18 @@ function App(): React.JSX.Element {
     startDeviceScan(); // 다시 스캔 시작
   };
 
+  // RefreshControl에서 스캔 재시작
+  const onRefresh = () => {
+    setRefreshing(true);
+    startDeviceScan();
+    setTimeout(() => {
+      setRefreshing(false); // 3초 후 RefreshControl 종료
+    }, 3000);
+  };
+
   // View
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       {bluetoothState === 'on' ? (
         <>
           {!scanFinished ? (
@@ -168,6 +179,9 @@ function App(): React.JSX.Element {
             renderItem={({item, index}) => (
               <BluetoothRenderItem device={item} index={index} />
             )}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
           />
         </>
       ) : (
