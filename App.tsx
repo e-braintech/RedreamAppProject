@@ -7,6 +7,8 @@
 
 import React, {useEffect, useState} from 'react';
 import {
+  AppState,
+  AppStateStatus,
   FlatList,
   Linking,
   Platform,
@@ -65,6 +67,9 @@ function App(): React.JSX.Element {
   const [scanFinished, setScanFinished] = useState<boolean>(false); // 스캔이 끝났는지 여부를 저장하는 상태
   const [refreshing, setRefreshing] = useState<boolean>(false); // RefreshControl 상태
   const [connectedDevice, setConnectedDevice] = useState<Device | null>(null); // 연결된 기기 상태
+  const [appState, setAppState] = useState<AppStateStatus>(
+    AppState.currentState,
+  ); // 앱 상태 저장
 
   useEffect(() => {
     requestPermissions();
@@ -86,11 +91,32 @@ function App(): React.JSX.Element {
       }
     }, true);
 
+    // AppState를 통해 앱 상태 변경 감지
+    const appStateSubscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
+
     return () => {
       subscription.remove(); // 컴포넌트 언마운트 시 상태 변경 감지 이벤트 해제
       BLEService.manager.stopDeviceScan(); // 컴포넌트가 언마운트될 때 스캔 종료
     };
   }, []);
+
+  // 앱 상태가 변경될 때 호출되는 함수
+  const handleAppStateChange = (nextAppState: AppStateStatus) => {
+    if (appState.match(/inactive|background/) && nextAppState === 'active') {
+      // 앱이 백그라운드에서 포그라운드로 돌아옴
+      console.log('App has come to the foreground');
+    } else if (nextAppState === 'background' || nextAppState === 'inactive') {
+      // 앱이 백그라운드 또는 종료 상태로 감지될 때 연결된 기기 해제
+      console.log('App has gone to the background or is inactive');
+      if (connectedDevice) {
+        disconnectFromDevice(connectedDevice);
+      }
+    }
+    setAppState(nextAppState); // 현재 상태 업데이트
+  };
 
   // 블루투스 장치 스캔 함수 (3초 후 스캔 중지)
   const startDeviceScan = () => {
@@ -186,7 +212,7 @@ function App(): React.JSX.Element {
         console.log('Device disconnected:', device);
       })
       .catch(error => {
-        console.error('Failed to disconnect device:', error);
+        console.log('Failed to disconnect device:', error);
         Toast.show({
           type: 'error',
           text1: 'Disconnection Failed',
