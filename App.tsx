@@ -7,10 +7,10 @@
 
 import React, {useEffect, useState} from 'react';
 import {
-  Button,
   FlatList,
   Linking,
   Platform,
+  Pressable,
   RefreshControl,
   SafeAreaView,
   Text,
@@ -163,7 +163,7 @@ function App(): React.JSX.Element {
         console.log('Device connected:', connectedDevice);
       })
       .catch(error => {
-        console.error('Failed to connect to device:', error);
+        console.log('Failed to connect to device:', error);
         Toast.show({
           type: 'error',
           text1: 'Connection Failed',
@@ -218,9 +218,21 @@ function App(): React.JSX.Element {
       {bluetoothState === 'on' ? (
         <>
           {!scanFinished ? (
-            <Text>Scanning for devices...</Text>
+            <Text style={{textAlign: 'center', marginBottom: 50}}>
+              디바이스 스캔 중...
+            </Text>
           ) : (
-            <Button title="Start Scanning Again" onPress={handleRestartScan} />
+            <Pressable
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 50,
+                backgroundColor: 'blue',
+                height: 50,
+              }}
+              onPress={handleRestartScan}>
+              <Text style={{color: 'white'}}>스캔</Text>
+            </Pressable>
           )}
           <FlatList
             data={devices}
@@ -242,19 +254,21 @@ function App(): React.JSX.Element {
       ) : (
         <>
           {Platform.OS === 'ios' ? (
-            <Button
-              title="Go to Bluetooth Settings"
+            <Pressable
               onPress={enableBluetooth} // iOS에서는 설정으로 이동
-            />
+            >
+              <Text>블루투스 켜기</Text>
+            </Pressable>
           ) : (
-            <Button
-              title="Turn Bluetooth On"
+            <Pressable
               onPress={enableBluetooth} // Android에서는 블루투스를 켤 수 있음
-            />
+            >
+              <Text>블루투스 켜기</Text>
+            </Pressable>
           )}
         </>
       )}
-      <Toast />
+      <Toast position="bottom" />
     </SafeAreaView>
   );
 }

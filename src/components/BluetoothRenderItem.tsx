@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Text, View} from 'react-native';
+import {Pressable, Text, View} from 'react-native';
 import {Device} from 'react-native-ble-plx';
 
 interface BluetoothRenderItemProps {
@@ -18,19 +18,45 @@ const BluetoothRenderItem: React.FC<BluetoothRenderItemProps> = ({
   isConnected,
 }) => {
   return (
-    <View key={index} style={{padding: 10, borderBottomWidth: 1}}>
-      <Text>{device.name || 'Unnamed Device'}</Text>
-      <Text>{device.id}</Text>
-
-      {/* 연결 상태에 따라 버튼 표시 */}
-      {isConnected ? (
-        <Button
-          title="Disconnect"
-          onPress={() => disconnectFromDevice?.(device)}
-        />
-      ) : (
-        <Button title="Connect" onPress={() => connectToDevice(device)} />
-      )}
+    <View key={index} style={{paddingHorizontal: 15}}>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        <View style={{flex: 8}}>
+          <Text style={{marginBottom: 10}}>{device.name}</Text>
+          <Text style={{fontSize: 8}}>{device.id}</Text>
+        </View>
+        <Pressable
+          style={{
+            flex: 2,
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 10,
+            backgroundColor: isConnected ? 'red' : 'blue',
+          }}
+          onPress={
+            isConnected
+              ? () => disconnectFromDevice?.(device)
+              : () => connectToDevice(device)
+          }>
+          {isConnected ? (
+            <Text style={{fontSize: 14, color: 'white'}}>연결 해제</Text>
+          ) : (
+            <Text style={{fontSize: 14, color: 'white'}}>연결</Text>
+          )}
+        </Pressable>
+      </View>
+      <View
+        style={{
+          borderWidth: 1,
+          borderColor: 'lightgray',
+          width: '100%',
+          marginVertical: 20,
+        }}
+      />
     </View>
   );
 };
