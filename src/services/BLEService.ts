@@ -1,18 +1,18 @@
+import {PermissionsAndroid, Platform} from 'react-native';
 import {
   BleError,
   BleErrorCode,
   BleManager,
-  Device,
   State as BluetoothState,
+  Device,
   LogLevel,
+  type Base64,
+  type Characteristic,
   type DeviceId,
+  type Subscription,
   type TransactionId,
   type UUID,
-  type Characteristic,
-  type Base64,
-  type Subscription,
 } from 'react-native-ble-plx';
-import {PermissionsAndroid, Platform} from 'react-native';
 import Toast from 'react-native-toast-message';
 
 const deviceNotConnectedErrorText = 'Device is not connected';

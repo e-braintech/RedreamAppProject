@@ -5,29 +5,11 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  Alert,
-  PermissionsAndroid,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Button, Linking, Platform, Text, View} from 'react-native';
 import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import Toast from 'react-native-toast-message';
+import {BLEService} from './src/services/BLEService';
 
 async function requestPermissions() {
   if (Platform.OS === 'ios') {
@@ -65,98 +47,71 @@ async function requestPermissions() {
   }
 }
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  // Logic
+  const [bluetoothState, setBluetoothState] = useState<string | null>(null);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  // 블루투스 설정 페이지로 이동하는 함수
+  const openBluetoothSettings = () => {
+    if (Platform.OS === 'ios') {
+      Linking.openURL('App-Prefs:root=Bluetooth');
+    } else if (Platform.OS === 'android') {
+      Linking.openSettings();
+    }
   };
 
   useEffect(() => {
     requestPermissions();
+
+    // 블루투스 상태 확인
+    BLEService.getState()
+      .then(state => {
+        if (state === 'PoweredOn') {
+          setBluetoothState('on');
+          Toast.show({
+            type: 'success',
+            text1: 'Bluetooth is ON',
+            text2: 'Bluetooth is currently enabled.',
+          });
+        } else if (state === 'PoweredOff') {
+          setBluetoothState('off');
+          Toast.show({
+            type: 'error',
+            text1: 'Bluetooth is OFF',
+            text2: 'Bluetooth is currently disabled.',
+          });
+        } else {
+          setBluetoothState(null);
+        }
+      })
+      .catch(error => {
+        console.error('Error checking Bluetooth state:', error);
+        setBluetoothState('Error');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Failed to check Bluetooth state.',
+        });
+      });
   }, []);
 
+  // View
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Button
+        title={
+          bluetoothState === 'on'
+            ? 'Go to Bluetooth Settings (Turn Off)'
+            : 'Go to Bluetooth Settings (Turn On)'
+        }
+        onPress={openBluetoothSettings}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      <Text>
+        {bluetoothState === 'on' ? 'Bluetooth is ON' : 'Bluetooth is OFF'}
+      </Text>
+      <Toast />
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
