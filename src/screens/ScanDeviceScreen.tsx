@@ -11,11 +11,14 @@ import {
   Text,
 } from 'react-native';
 import {Device, State} from 'react-native-ble-plx';
+import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
 import Toast from 'react-native-toast-message';
 import BluetoothRenderItem from '../components/BluetoothRenderItem';
 import {BLEService} from '../services/BLEService';
 
-const ScanDeviceScreen = ({navigation}) => {
+type Props = NativeStackScreenProps<ROOT_NAVIGATION, 'ScanDevice'>;
+
+const ScanDeviceScreen = ({navigation}: Props) => {
   // Logic
   const [bluetoothState, setBluetoothState] = useState<string | null>(null); // 블루투스 활성화 여부를 감지하는 상태
   const [devices, setDevices] = useState<Device[]>([]); // 스캔된 BLE 기기들을 저장하는 상태, Device[] 타입으로 정의
@@ -133,17 +136,17 @@ const ScanDeviceScreen = ({navigation}) => {
   const connectToDevice = (device: Device) => {
     BLEService.manager
       .connectToDevice(device.id)
-      .then(connectedDevice => {
-        setConnectedDevice(connectedDevice); // 연결된 기기 상태 저장
+      .then(device => {
+        setConnectedDevice(device); // 연결된 기기 상태 저장
         Toast.show({
           type: 'success',
           text1: 'Connected',
-          text2: `Connected to ${connectedDevice.name}`,
+          text2: `Connected to ${device.name}`,
         });
-        console.log('Device connected:', connectedDevice);
+        console.log('Device connected:', device);
 
         // 연결 후 DetailDeviceScreen으로 이동 및 데이터 전달
-        navigation.navigate('DetailDevice', {device: connectedDevice});
+        navigation.navigate('DetailDevice', {device: device});
       })
       .catch(error => {
         console.log('Failed to connect to device:', error);

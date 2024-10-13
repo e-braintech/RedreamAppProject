@@ -1,20 +1,23 @@
 import {RouteProp, useRoute} from '@react-navigation/native';
 import React from 'react';
 import {Pressable, Text, View} from 'react-native';
+import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
 import {encodeToBase64} from '../common';
 import {BLEService} from '../services/BLEService';
 import {head_up_down, head_up_up} from '../utils/bytes';
 import {characteristic_UUID, service_UUID} from '../utils/uuids';
 
-const DetailDeviceScreen = ({navigation}) => {
+type Props = NativeStackScreenProps<ROOT_NAVIGATION, 'DetailDevice'>;
+
+const DetailDeviceScreen = ({navigation}: Props) => {
   // View
   const route = useRoute<RouteProp<ROOT_NAVIGATION, 'DetailDevice'>>(); // useRoute로 데이터 접근
   const {device} = route.params; // 전달받은 기기 데이터
 
   // 데이터를 블루투스 기기로 보내는 함수
-  const sendDataToDevice = async (byteArray: number[]) => {
+  const sendDataToDevice = async (data: string) => {
     try {
-      const base64Data = encodeToBase64(byteArray); // 바이트 배열을 Base64로 변환
+      const base64Data = encodeToBase64(data); // 문자열을 Base64로 변환
 
       // 블루투스 기기에 데이터 전송
       await BLEService.manager.writeCharacteristicWithResponseForDevice(
