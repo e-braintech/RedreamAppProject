@@ -141,6 +141,32 @@ const ScanDeviceScreen = ({navigation}: Props) => {
     }
   };
 
+  // 기기와 연결된 후 서비스 및 특성 UUID를 로그로 출력하는 함수
+  const logDeviceServicesAndCharacteristics = async (device: Device) => {
+    try {
+      // 모든 서비스를 가져옵니다
+      const services = await BLEService.manager.servicesForDevice(device.id);
+
+      for (const service of services) {
+        console.log(`Service UUID: ${service.uuid}`);
+
+        // 각 서비스에 대해 특성을 가져옵니다
+        const characteristics =
+          await BLEService.manager.characteristicsForDevice(
+            device.id,
+            service.uuid,
+          );
+
+        // 각 특성 UUID를 로그로 출력
+        characteristics.forEach(characteristic => {
+          console.log(`Characteristic UUID: ${characteristic.uuid}`);
+        });
+      }
+    } catch (error) {
+      console.error('Failed to discover services and characteristics:', error);
+    }
+  };
+
   // 블루투스 기기와 연결하는 함수
   const connectToDevice = (device: Device) => {
     BLEService.manager
@@ -157,6 +183,10 @@ const ScanDeviceScreen = ({navigation}: Props) => {
           text1: 'Connected',
           text2: `Connected to ${device.name}`,
         });
+
+        // 서비스와 특성 UUID 로그 출력
+        logDeviceServicesAndCharacteristics(device);
+
         navigation.navigate('DetailDevice', {device});
       })
       .catch(error => {
