@@ -145,20 +145,21 @@ const ScanDeviceScreen = ({navigation}: Props) => {
   const connectToDevice = (device: Device) => {
     BLEService.manager
       .connectToDevice(device.id)
+      .then(() =>
+        BLEService.manager.discoverAllServicesAndCharacteristicsForDevice(
+          device.id,
+        ),
+      )
       .then(device => {
-        setConnectedDevice(device); // 연결된 기기 상태 저장
+        setConnectedDevice(device);
         Toast.show({
           type: 'success',
           text1: 'Connected',
           text2: `Connected to ${device.name}`,
         });
-        console.log('Device connected:', device);
-
-        // 연결 후 DetailDeviceScreen으로 이동 및 데이터 전달
-        navigation.navigate('DetailDevice', {device: device});
+        navigation.navigate('DetailDevice', {device});
       })
       .catch(error => {
-        console.log('Failed to connect to device:', error);
         Toast.show({
           type: 'error',
           text1: 'Connection Failed',

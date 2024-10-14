@@ -4,7 +4,6 @@ import {Pressable, Text, View} from 'react-native';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
 import {encodeToBase64} from '../common';
 import {BLEService} from '../services/BLEService';
-import {head_up_down, head_up_up} from '../utils/bytes';
 import {characteristic_UUID, service_UUID} from '../utils/uuids';
 
 type Props = NativeStackScreenProps<ROOT_NAVIGATION, 'DetailDevice'>;
@@ -15,19 +14,26 @@ const DetailDeviceScreen = ({navigation}: Props) => {
   const {device} = route.params; // 전달받은 기기 데이터
 
   // 데이터를 블루투스 기기로 보내는 함수
-  const sendDataToDevice = async (data: string) => {
+  const sendDataToDevice = (data: string) => {
     try {
       const base64Data = encodeToBase64(data); // 문자열을 Base64로 변환
 
-      // 블루투스 기기에 데이터 전송
-      await BLEService.manager.writeCharacteristicWithResponseForDevice(
-        device.id,
-        service_UUID,
-        characteristic_UUID,
-        base64Data, // Base64로 인코딩된 데이터를 전송
-      );
+      // 특성이 검색되었는지 확인
+      if (!device) {
+        console.error('No connected device found');
+        return;
+      }
 
-      console.log(`Data sent: ${base64Data}`);
+      // 블루투스 기기에 데이터 전송
+      BLEService.manager
+        .writeCharacteristicWithResponseForDevice(
+          device.id,
+          service_UUID, // 사용하려는 서비스 UUID
+          characteristic_UUID, // 사용하려는 특성 UUID
+          base64Data, // Base64로 인코딩된 데이터를 전송
+        )
+        .then(res => console.log('Data sent:', res))
+        .catch(err => console.log('Error sending data:', err));
     } catch (error) {
       console.error('Failed to send data:', error);
     }
@@ -47,24 +53,12 @@ const DetailDeviceScreen = ({navigation}: Props) => {
 
       {/* 예시로 head_up_up 버튼을 추가 */}
       <Pressable
-        onPress={() => sendDataToDevice(head_up_up)} // head_up_up 바이트 배열 전송
         style={{
           backgroundColor: 'blue',
           padding: 10,
           marginTop: 20,
         }}>
-        <Text style={{color: 'white'}}>Head Up Up</Text>
-      </Pressable>
-
-      {/* head_up_down 버튼 */}
-      <Pressable
-        onPress={() => sendDataToDevice(head_up_down)} // head_up_down 바이트 배열 전송
-        style={{
-          backgroundColor: 'green',
-          padding: 10,
-          marginTop: 20,
-        }}>
-        <Text style={{color: 'white'}}>Head Up Down</Text>
+        <Text style={{color: 'white'}}>right_down_up</Text>
       </Pressable>
     </View>
   );
