@@ -56,23 +56,33 @@ const ScanDeviceScreen = ({navigation}: Props) => {
 
     return () => {
       subscription.remove(); // 컴포넌트 언마운트 시 상태 변경 감지 이벤트 해제
+      appStateSubscription.remove(); // 앱 상태 감지 해제
       BLEService.manager.stopDeviceScan(); // 컴포넌트가 언마운트될 때 스캔 종료
     };
   }, []);
 
   // 앱 상태가 변경될 때 호출되는 함수
   const handleAppStateChange = (nextAppState: AppStateStatus) => {
+    console.log('Current app state: ', nextAppState); // 현재 상태 로그 출력
+
     if (appState.match(/inactive|background/) && nextAppState === 'active') {
-      // 앱이 백그라운드에서 포그라운드로 돌아옴
       console.log('App has come to the foreground');
+      BLEService.manager.state().then(bluetoothState => {
+        if (bluetoothState === State.PoweredOn) {
+          startDeviceScan(); // Bluetooth가 켜져 있을 때만 스캔 재시작
+        } else {
+          console.log('Bluetooth is not powered on');
+          setBluetoothState('off');
+        }
+      });
     } else if (nextAppState === 'background' || nextAppState === 'inactive') {
-      // 앱이 백그라운드 또는 종료 상태로 감지될 때 연결된 기기 해제
       console.log('App has gone to the background or is inactive');
       if (connectedDevice) {
         disconnectFromDevice(connectedDevice);
       }
+      setDevices([]);
     }
-    setAppState(nextAppState); // 현재 상태 업데이트
+    setAppState(nextAppState); // 상태 업데이트
   };
 
   // 블루투스 장치 스캔 함수 (3초 후 스캔 중지)
@@ -88,7 +98,6 @@ const ScanDeviceScreen = ({navigation}: Props) => {
         setDevices(prevDevices => {
           // 기기가 중복되지 않도록 필터링
           if (!prevDevices.find(d => d.id === device.id)) {
-            // console.log('Device found:', device); // 새로운 기기 발견시 로그 출력
             return [...prevDevices, device];
           }
           return prevDevices;
