@@ -2,7 +2,11 @@
 
 어플리케이션과 스마트 에어 베개 간 Bluetooth 기능을 통해 통신하는 BLE 프로젝트 입니다.
 
-## Skills
+## 프로젝트 구성도
+
+![프로젝트 구성도](프레젠테이션1.jpg)
+
+## 프로젝트 기술
 
 - React Native CLI
 - TypeScript
