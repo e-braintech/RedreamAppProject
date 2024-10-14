@@ -40,26 +40,19 @@ type Props = NativeStackScreenProps<ROOT_NAVIGATION, 'DetailDevice'>;
 const DetailDeviceScreen = ({navigation}: Props) => {
   // View
   const route = useRoute<RouteProp<ROOT_NAVIGATION, 'DetailDevice'>>(); // useRoute로 데이터 접근
-  const {device} = route.params; // 전달받은 기기 데이터
+  const {deviceId} = route.params; // 전달받은 기기 데이터
 
   // 데이터를 블루투스 기기로 보내는 함수
   const sendDataToDevice = (data: string) => {
     try {
-      const base64Data = encodeToBase64(data); // 문자열을 Base64로 변환
+      const base64Data = encodeToBase64(data);
 
-      // 특성이 검색되었는지 확인
-      if (!device) {
-        console.error('No connected device found');
-        return;
-      }
-
-      // 블루투스 기기에 데이터 전송
       BLEService.manager
         .writeCharacteristicWithResponseForDevice(
-          device.id,
-          service_UUID, // 사용하려는 서비스 UUID
-          characteristic_UUID, // 사용하려는 특성 UUID
-          base64Data, // Base64로 인코딩된 데이터를 전송
+          deviceId,
+          service_UUID,
+          characteristic_UUID,
+          base64Data,
         )
         .then(res => console.log('Data sent:', res))
         .catch(err => console.log('Error sending data:', err));

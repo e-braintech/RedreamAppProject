@@ -187,7 +187,9 @@ const ScanDeviceScreen = ({navigation}: Props) => {
         // 서비스와 특성 UUID 로그 출력
         logDeviceServicesAndCharacteristics(device);
 
-        navigation.navigate('DetailDevice', {device});
+        navigation.navigate('DetailDevice', {
+          deviceId: device.id,
+        });
       })
       .catch(error => {
         Toast.show({
