@@ -4,8 +4,7 @@
 
 ## 프로젝트 구성도
 
-![프로젝트 구성도](https://github.com/user-attachments/assets/271e36ba-ecd4-459e-9675-96e43473c5cb)
-
+![프로젝트 구성도](https://github.com/user-attachments/assets/ac2c129a-8440-439a-b010-ad73059ac5d6)
 
 ## 프로젝트 기술
 
