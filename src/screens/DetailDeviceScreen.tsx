@@ -4,6 +4,7 @@ import {Pressable, Text, View} from 'react-native';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
 import {encodeToBase64} from '../common';
 import {BLEService} from '../services/BLEService';
+import {right_up_down, right_up_up} from '../utils/actions';
 import {characteristic_UUID, service_UUID} from '../utils/uuids';
 
 type Props = NativeStackScreenProps<ROOT_NAVIGATION, 'DetailDevice'>;
@@ -57,7 +58,10 @@ const DetailDeviceScreen = ({navigation}: Props) => {
           backgroundColor: 'blue',
           padding: 10,
           marginTop: 20,
-        }}>
+        }}
+        onPressIn={() => sendDataToDevice(right_up_down)} // 버튼을 누를 때 전송
+        onPressOut={() => sendDataToDevice(right_up_up)} // 버튼에서 손을 뗄 때 전송
+      >
         <Text style={{color: 'white'}}>right_down_up</Text>
       </Pressable>
     </View>
