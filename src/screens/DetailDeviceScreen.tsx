@@ -24,6 +24,7 @@ import {
   nose_right_down_down,
   nose_right_down_up,
   nose_right_up_down,
+  nose_right_up_up,
   right_down_down,
   right_down_up,
   right_up_down,
@@ -271,7 +272,7 @@ const DetailDeviceScreen = ({navigation}: Props) => {
             marginTop: 20,
           }}
           onPressIn={() => sendDataToDevice(nose_right_up_down)} // 버튼을 누를 때 전송
-          onPressOut={() => sendDataToDevice(nose_right_up_down)} // 버튼에서 손을 뗄 때 전송
+          onPressOut={() => sendDataToDevice(nose_right_up_up)} // 버튼에서 손을 뗄 때 전송
         >
           <Text style={{color: 'white'}}>코 우 up</Text>
         </Pressable>
