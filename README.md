@@ -2,6 +2,12 @@
 
 어플리케이션과 스마트 에어 베개 간 Bluetooth 기능을 통해 통신하는 BLE 프로젝트 입니다.
 
+# 목차
+
+- [프로젝트 구성도](#프로젝트-구성도)
+- [프로젝트 기술](#프로젝트-기술)
+- [프로젝트 실행 방법](#프로젝트-실행-방법)
+
 ## 프로젝트 구성도
 
 ![프로젝트 구성도](https://github.com/user-attachments/assets/ac2c129a-8440-439a-b010-ad73059ac5d6)
@@ -10,13 +16,13 @@
 
 - React Native CLI
 - TypeScript
-- React Navigation
-  - Stack
-  - Bottom-Tab
+- [React Navigation](https://reactnavigation.org/)
+  - [Stack](https://reactnavigation.org/docs/stack-navigator/)
+  - [Bottom-Tab](https://reactnavigation.org/docs/bottom-tab-navigator/)
 - BLE
-  - react-native-ble-plx
-  - react-native-ble-manager
-- React-native-permissions
+  - [react-native-ble-plx](https://github.com/dotintent/react-native-ble-plx)
+  - [react-native-ble-manager](https://github.com/innoveit/react-native-ble-manager)
+- [react-native-permissions](https://github.com/zoontek/react-native-permissions)
 
 ## 프로젝트 실행 방법
 
