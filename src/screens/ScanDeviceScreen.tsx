@@ -177,6 +177,7 @@ const ScanDeviceScreen = ({navigation}: Props) => {
         ),
       )
       .then(device => {
+        console.log(JSON.stringify(device, null, 5));
         setConnectedDevice(device);
         Toast.show({
           type: 'success',
