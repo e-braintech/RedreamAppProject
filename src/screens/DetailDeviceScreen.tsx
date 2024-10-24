@@ -2,11 +2,11 @@ import {RouteProp, useRoute} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
-import {encodeToBase64} from '../common';
 import SelectStepModal from '../components/SelectStepModal';
 import {BLEService} from '../services/BLEService';
 import {ActionStepType} from '../types/types';
-import {characteristic_UUID, service_UUID} from '../utils/uuids';
+import {encodeToBase64} from '../utils/common';
+import {characteristic_UUID, service_UUID} from '../utils/common/uuids';
 
 type Props = NativeStackScreenProps<ROOT_NAVIGATION, 'DetailDevice'>;
 
