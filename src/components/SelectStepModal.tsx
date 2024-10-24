@@ -26,6 +26,7 @@ const SelectStepModal: React.FC<SelectStepModalProps> = ({
   onToggle,
 }) => {
   const handleSelect = (step: number, index: number) => {
+    console.log(`높이 설정: ${step}단계`); // 로그로 선택된 텍스트 출력
     onSelect(step, index);
     onToggle(false); // 선택 후 드롭다운을 닫습니다.
   };
@@ -35,7 +36,8 @@ const SelectStepModal: React.FC<SelectStepModalProps> = ({
       <TouchableOpacity
         onPress={() => onToggle(true)}
         style={{
-          padding: 10,
+          paddingHorizontal: 20,
+          paddingVertical: 10,
           borderRadius: 5,
           backgroundColor: '#f0f0f0',
         }}>
@@ -62,11 +64,7 @@ const SelectStepModal: React.FC<SelectStepModalProps> = ({
             <View
               style={{
                 width: '80%',
-                backgroundColor: '#fff',
-                borderWidth: 1,
-                borderColor: '#000',
-                borderRadius: 5,
-                padding: 10,
+                backgroundColor: '#ffffff',
               }}>
               <FlatList
                 data={data}

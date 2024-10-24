@@ -23,7 +23,6 @@ const SelectStepModalRenderItem: React.FC<SelectStepModalRenderItemProps> = ({
         padding: 10,
         backgroundColor: '#f0f0f0',
         borderBottomWidth: 1,
-        borderRadius: 5,
         borderBottomColor: '#ddd',
       }}>
       <Text style={{textAlign: 'center'}}>{`${step} 단계`}</Text>
