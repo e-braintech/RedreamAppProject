@@ -192,6 +192,7 @@ const ScanDeviceScreen = ({navigation}: Props) => {
         });
       })
       .catch(error => {
+        console.log(JSON.stringify(error, null, 5));
         Toast.show({
           type: 'error',
           text1: 'Connection Failed',
