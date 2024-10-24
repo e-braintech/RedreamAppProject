@@ -211,7 +211,7 @@ const ScanDeviceScreen = ({navigation}: Props) => {
           text1: 'Disconnected',
           text2: `Disconnected from ${device.name}`,
         });
-        console.log('Device disconnected:', device);
+        console.log('Device disconnected:', JSON.stringify(device, null, 5));
       })
       .catch(error => {
         console.log('Failed to disconnect device:', error);

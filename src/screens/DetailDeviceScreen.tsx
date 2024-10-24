@@ -29,6 +29,9 @@ const DetailDeviceScreen = ({navigation}: Props) => {
   const route = useRoute<RouteProp<ROOT_NAVIGATION, 'DetailDevice'>>(); // useRoute로 데이터 접근
   const {deviceId} = route.params; // 전달받은 기기 데이터
 
+  // View State
+  // const [batteryLevel, setBatteryLevel] = useState<number | null>(null);
+
   // 머리
   const [head, setHead] = useState<number | null>(null);
 
@@ -109,6 +112,33 @@ const DetailDeviceScreen = ({navigation}: Props) => {
       console.error('Failed to send data:', error);
     }
   };
+
+  // 배터리 잔량을 읽어오는 함수
+  // const readBatteryLevel = async () => {
+  //   try {
+  //     // Battery Service UUID (0x180F)와 Battery Level Characteristic UUID (0x2A19)를 사용하여 값을 읽어옵니다.
+  //     const characteristic =
+  //       await BLEService.manager.readCharacteristicForDevice(
+  //         deviceId,
+  //         // service_UUID, // Battery Service UUID
+  //         // characteristic_UUID, // Battery Level Characteristic UUID
+  //       );
+
+  //     if (characteristic?.value) {
+  //       // Base64로 인코딩된 값을 디코딩
+  //       const batteryValue = parseInt(atob(characteristic.value), 10);
+  //       setBatteryLevel(batteryValue);
+  //       console.log(`Battery level: ${batteryValue}%`);
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to read battery level:', error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  // 화면이 로드될 때 배터리 정보를 읽어옵니다.
+  //   readBatteryLevel();
+  // }, []);
 
   // Logic
   return (
