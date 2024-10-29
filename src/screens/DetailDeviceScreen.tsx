@@ -1,5 +1,5 @@
 import {RouteProp, useRoute} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
 import SelectStepModal from '../components/SelectStepModal';
@@ -29,32 +29,17 @@ const DetailDeviceScreen = ({navigation}: Props) => {
   const route = useRoute<RouteProp<ROOT_NAVIGATION, 'DetailDevice'>>(); // useRoute로 데이터 접근
   const {deviceId} = route.params; // 전달받은 기기 데이터
 
-  // View State
-  // const [batteryLevel, setBatteryLevel] = useState<number | null>(null);
+  let intervalId: NodeJS.Timeout | null = null; // interval ID, 주기적인 호출을 중단할 때 사용
 
-  // 머리
-  const [head, setHead] = useState<number | null>(null);
-
-  // 목
-  const [neck, setNeck] = useState<number | null>(null);
-
-  // 어깨
-  const [shoulder, setShoulder] = useState<number | null>(null);
-
-  // 좌측
-  const [leftSide, setLeftSide] = useState<number | null>(null);
-
-  // 우측
-  const [rightSide, setRightSide] = useState<number | null>(null);
-
-  // 코좌
-  const [leftNose, setLeftNose] = useState<number | null>(null);
-
-  // 코우
-  const [rightNose, setRightNose] = useState<number | null>(null);
-
-  // 드롭다운 컴포넌트 open 상태
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [batteryLevel, setBatteryLevel] = useState<number | null>(null); // 배터리 레벨을 저장하는 상태
+  const [head, setHead] = useState<number | null>(null); // 머리
+  const [neck, setNeck] = useState<number | null>(null); // 목
+  const [shoulder, setShoulder] = useState<number | null>(null); // 어깨
+  const [leftSide, setLeftSide] = useState<number | null>(null); // 좌측
+  const [rightSide, setRightSide] = useState<number | null>(null); // 우측
+  const [leftNose, setLeftNose] = useState<number | null>(null); // 코좌
+  const [rightNose, setRightNose] = useState<number | null>(null); // 코우
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null); // 드롭다운 컴포넌트 open 상태
 
   // 드롭다운에서 항목 선택 시 호출되는 함수
   const handleSelectStep = (part: string, step: number) => {
@@ -114,31 +99,30 @@ const DetailDeviceScreen = ({navigation}: Props) => {
   };
 
   // 배터리 잔량을 읽어오는 함수
-  // const readBatteryLevel = async () => {
-  //   try {
-  //     // Battery Service UUID (0x180F)와 Battery Level Characteristic UUID (0x2A19)를 사용하여 값을 읽어옵니다.
-  //     const characteristic =
-  //       await BLEService.manager.readCharacteristicForDevice(
-  //         deviceId,
-  //         // service_UUID, // Battery Service UUID
-  //         // characteristic_UUID, // Battery Level Characteristic UUID
-  //       );
+  const readBatteryLevel = async () => {
+    try {
+      const characteristic =
+        await BLEService.manager.readCharacteristicForDevice(
+          deviceId,
+          service_UUID,
+          characteristic_UUID,
+        );
 
-  //     if (characteristic?.value) {
-  //       // Base64로 인코딩된 값을 디코딩
-  //       const batteryValue = parseInt(atob(characteristic.value), 10);
-  //       setBatteryLevel(batteryValue);
-  //       console.log(`Battery level: ${batteryValue}%`);
-  //     }
-  //   } catch (error) {
-  //     console.error('Failed to read battery level:', error);
-  //   }
-  // };
+      if (characteristic?.value) {
+        // Base64로 인코딩된 값을 디코딩
+        const batteryValue = parseInt(atob(characteristic.value), 10);
+        setBatteryLevel(batteryValue);
+        console.log(`Battery level: ${batteryValue}%`);
+      }
+    } catch (error) {
+      console.error('Failed to read battery level:', error);
+    }
+  };
 
-  // useEffect(() => {
-  // 화면이 로드될 때 배터리 정보를 읽어옵니다.
-  //   readBatteryLevel();
-  // }, []);
+  useEffect(() => {
+    // 화면이 로드될 때 배터리 정보를 읽어옵니다.
+    readBatteryLevel();
+  }, []);
 
   // Logic
   return (
