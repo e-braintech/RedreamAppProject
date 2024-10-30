@@ -29,8 +29,6 @@ const DetailDeviceScreen = ({navigation}: Props) => {
   const route = useRoute<RouteProp<ROOT_NAVIGATION, 'DetailDevice'>>(); // useRoute로 데이터 접근
   const {deviceId} = route.params; // 전달받은 기기 데이터
 
-  let intervalId: NodeJS.Timeout | null = null; // interval ID, 주기적인 호출을 중단할 때 사용
-
   const [batteryLevel, setBatteryLevel] = useState<number | null>(null); // 배터리 레벨을 저장하는 상태
   const [head, setHead] = useState<number | null>(null); // 머리
   const [neck, setNeck] = useState<number | null>(null); // 목

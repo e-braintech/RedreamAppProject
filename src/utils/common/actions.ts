@@ -40,4 +40,5 @@ export const nose_right_up_down: string = 'CSD';
 export const nose_right_down_up: string = 'CSF';
 export const nose_right_down_down: string = 'CSE';
 
-export const batteryLevel: string = '';
+export const batteryValue: string = '3703070A';
+// export const batteryValue: string = 'PA3710';

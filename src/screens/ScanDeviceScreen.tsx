@@ -148,7 +148,7 @@ const ScanDeviceScreen = ({navigation}: Props) => {
       const services = await BLEService.manager.servicesForDevice(device.id);
 
       for (const service of services) {
-        console.log(`Service UUID: ${service.uuid}`);
+        // console.log(`Service UUID: ${service.uuid}`);
 
         // 각 서비스에 대해 특성을 가져옵니다
         const characteristics =
@@ -159,7 +159,7 @@ const ScanDeviceScreen = ({navigation}: Props) => {
 
         // 각 특성 UUID를 로그로 출력
         characteristics.forEach(characteristic => {
-          console.log(`Characteristic UUID: ${characteristic.uuid}`);
+          // console.log(`Characteristic UUID: ${characteristic.uuid}`);
         });
       }
     } catch (error) {
