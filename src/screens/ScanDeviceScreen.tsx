@@ -110,7 +110,7 @@ const ScanDeviceScreen = ({navigation}: Props) => {
       BLEService.manager.stopDeviceScan();
       setIsScanning(false);
       setScanFinished(true); // 스캔이 끝났음을 표시
-      console.log('Scan stopped after 3 seconds');
+      // console.log('Scan stopped after 3 seconds');
     }, 3000);
   };
 
@@ -177,7 +177,7 @@ const ScanDeviceScreen = ({navigation}: Props) => {
         ),
       )
       .then(device => {
-        console.log(JSON.stringify(device, null, 5));
+        // console.log(JSON.stringify(device, null, 5));
         setConnectedDevice(device);
         Toast.show({
           type: 'success',
@@ -193,7 +193,7 @@ const ScanDeviceScreen = ({navigation}: Props) => {
         });
       })
       .catch(error => {
-        console.log(JSON.stringify(error, null, 5));
+        // console.log(JSON.stringify(error, null, 5));
         Toast.show({
           type: 'error',
           text1: 'Connection Failed',
@@ -213,7 +213,7 @@ const ScanDeviceScreen = ({navigation}: Props) => {
           text1: 'Disconnected',
           text2: `Disconnected from ${device.name}`,
         });
-        console.log('Device disconnected:', JSON.stringify(device, null, 5));
+        // console.log('Device disconnected:', JSON.stringify(device, null, 5));
       })
       .catch(error => {
         console.log('Failed to disconnect device:', error);

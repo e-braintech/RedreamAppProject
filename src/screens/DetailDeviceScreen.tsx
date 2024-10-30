@@ -5,8 +5,13 @@ import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native
 import SelectStepModal from '../components/SelectStepModal';
 import {BLEService} from '../services/BLEService';
 import {ActionStepType} from '../types/types';
-import {encodeToBase64} from '../utils/common';
-import {characteristic_UUID, service_UUID} from '../utils/common/uuids';
+import {charToDecimal, decodeFromBase64, encodeToBase64} from '../utils/common';
+import {batteryValue} from '../utils/common/actions';
+import {
+  characteristic_UUID,
+  notify_UUID,
+  service_UUID,
+} from '../utils/common/uuids';
 
 type Props = NativeStackScreenProps<ROOT_NAVIGATION, 'DetailDevice'>;
 
@@ -78,53 +83,71 @@ const DetailDeviceScreen = ({navigation}: Props) => {
   };
 
   // 데이터를 블루투스 기기로 보내는 함수
-  const sendDataToDevice = (data: string) => {
+  // const sendDataToDevice = (data: string) => {
+  //   try {
+  //     const base64Data = encodeToBase64(data);
+
+  //     BLEService.manager
+  //       .writeCharacteristicWithResponseForDevice(
+  //         deviceId,
+  //         service_UUID,
+  //         characteristic_UUID,
+  //         base64Data,
+  //       )
+  //       .then(res => console.log('Data sent:', res))
+  //       .catch(err => console.log('Error sending data:', err));
+  //   } catch (error) {
+  //     console.error('Failed to send data:', error);
+  //   }
+  // };
+
+  // 배터리 측정 요청을 보내는 함수
+  const requestBatteryLevel = async () => {
     try {
-      const base64Data = encodeToBase64(data);
+      const base64Data = encodeToBase64(batteryValue);
 
-      BLEService.manager
-        .writeCharacteristicWithResponseForDevice(
-          deviceId,
-          service_UUID,
-          characteristic_UUID,
-          base64Data,
-        )
-        .then(res => console.log('Data sent:', res))
-        .catch(err => console.log('Error sending data:', err));
+      // 측정 요청 전송
+      await BLEService.manager.writeCharacteristicWithResponseForDevice(
+        deviceId,
+        service_UUID,
+        characteristic_UUID,
+        base64Data,
+      );
+
+      // 배터리 응답 모니터링 설정
+      BLEService.manager.monitorCharacteristicForDevice(
+        deviceId,
+        service_UUID,
+        notify_UUID,
+        (error, characteristic) => {
+          if (error) {
+            console.log('Failed to monitor characteristic:', error);
+            return;
+          }
+
+          if (characteristic?.value) {
+            const decodedValue = decodeFromBase64(characteristic.value);
+            const targetCharValue = decodedValue[4];
+            const decimalValue = charToDecimal(targetCharValue);
+            console.log(`Battery Data: ${decimalValue}`);
+            setBatteryLevel(decimalValue);
+          }
+        },
+      );
     } catch (error) {
-      console.error('Failed to send data:', error);
-    }
-  };
-
-  // 배터리 잔량을 읽어오는 함수
-  const readBatteryLevel = async () => {
-    try {
-      const characteristic =
-        await BLEService.manager.readCharacteristicForDevice(
-          deviceId,
-          service_UUID,
-          characteristic_UUID,
-        );
-
-      if (characteristic?.value) {
-        // Base64로 인코딩된 값을 디코딩
-        const batteryValue = parseInt(atob(characteristic.value), 10);
-        setBatteryLevel(batteryValue);
-        console.log(`Battery level: ${batteryValue}%`);
-      }
-    } catch (error) {
-      console.error('Failed to read battery level:', error);
+      console.log('Failed to request battery level:', error);
     }
   };
 
   useEffect(() => {
-    // 화면이 로드될 때 배터리 정보를 읽어옵니다.
-    readBatteryLevel();
+    requestBatteryLevel();
   }, []);
-
   // Logic
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
+      <Text style={{fontSize: 18, fontWeight: 'medium', marginRight: 30}}>
+        {batteryLevel}
+      </Text>
       <View
         style={{
           flex: 1,
