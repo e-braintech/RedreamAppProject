@@ -1,8 +1,13 @@
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
 import {RouteProp, useFocusEffect, useRoute} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {Text, View} from 'react-native';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
+import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
-import SelectStepModal from '../components/SelectStepModal';
 import {BLEService} from '../services/BLEService';
 import {ActionStepType} from '../types/types';
 import {charToDecimal, decodeFromBase64, encodeToBase64} from '../utils/common';
@@ -43,6 +48,23 @@ const DetailDeviceScreen = ({navigation}: Props) => {
   const [leftNose, setLeftNose] = useState<number | null>(null); // 코좌
   const [rightNose, setRightNose] = useState<number | null>(null); // 코우
   const [openDropdown, setOpenDropdown] = useState<string | null>(null); // 드롭다운 컴포넌트 open 상태
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  const snapPoints = useMemo(() => ['20%', '50%'], []);
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
+
+  const renderBackdrop = useCallback(
+    (props: any) => <BottomSheetBackdrop {...props} pressBehavior="close" />,
+    [],
+  );
 
   // 드롭다운에서 항목 선택 시 호출되는 함수
   const handleSelectStep = (part: string, step: number) => {
@@ -147,143 +169,212 @@ const DetailDeviceScreen = ({navigation}: Props) => {
 
   // Logic
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
-      <Text style={{fontSize: 18, fontWeight: 'medium', marginRight: 30}}>
-        {batteryLevel}
-      </Text>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-        }}>
-        <Text style={{fontSize: 18, fontWeight: 'medium', marginRight: 30}}>
-          머리
-        </Text>
-        <SelectStepModal
-          data={actionStep}
-          selectedStep={head}
-          onSelect={step => handleSelectStep('head', step)}
-          isOpen={openDropdown === 'head'}
-          onToggle={isOpen => handleDropdownToggle('head', isOpen)}
-        />
-      </View>
+    <BottomSheetModalProvider>
+      <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={{fontSize: 32, fontWeight: 'bold', textAlign: 'center'}}>
+            나의 베개 설정
+          </Text>
+        </View>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View
+            style={{width: '100%', height: 200, backgroundColor: 'lightgray'}}
+          />
+        </View>
+        <View style={{flex: 1}}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              alignItems: 'center',
+              marginBottom: 20,
+            }}>
+            <Pressable
+              style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                height: '100%',
+                borderWidth: 1,
+                borderRadius: 10,
+              }}
+              onPress={handlePresentModalPress}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  backgroundColor: 'violet',
+                  marginBottom: 5,
+                }}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>1</Text>
+              </View>
+              <Text>머리</Text>
+            </Pressable>
 
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-        }}>
-        <Text style={{fontSize: 18, fontWeight: 'medium', marginRight: 30}}>
-          목
-        </Text>
-        <SelectStepModal
-          data={actionStep}
-          selectedStep={neck}
-          onSelect={step => handleSelectStep('neck', step)}
-          isOpen={openDropdown === 'neck'}
-          onToggle={isOpen => handleDropdownToggle('neck', isOpen)}
-        />
-      </View>
+            <Pressable
+              style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                height: '100%',
+                borderWidth: 1,
+                borderRadius: 10,
+              }}
+              onPress={handlePresentModalPress}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  backgroundColor: 'violet',
+                  marginBottom: 5,
+                }}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>2</Text>
+              </View>
+              <Text>목</Text>
+            </Pressable>
 
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-        }}>
-        <Text style={{fontSize: 18, fontWeight: 'medium', marginRight: 30}}>
-          어깨
-        </Text>
-        <SelectStepModal
-          data={actionStep}
-          selectedStep={shoulder}
-          onSelect={step => handleSelectStep('shoulder', step)}
-          isOpen={openDropdown === 'shoulder'}
-          onToggle={isOpen => handleDropdownToggle('shoulder', isOpen)}
-        />
-      </View>
+            <Pressable
+              style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                height: '100%',
+                borderWidth: 1,
+                borderRadius: 10,
+              }}
+              onPress={handlePresentModalPress}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  backgroundColor: 'violet',
+                  marginBottom: 5,
+                }}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>3</Text>
+              </View>
+              <Text>머리</Text>
+            </Pressable>
+          </View>
 
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-        }}>
-        <Text style={{fontSize: 18, fontWeight: 'medium', marginRight: 30}}>
-          좌측
-        </Text>
-        <SelectStepModal
-          data={actionStep}
-          selectedStep={leftSide}
-          onSelect={step => handleSelectStep('leftSide', step)}
-          isOpen={openDropdown === 'leftSide'}
-          onToggle={isOpen => handleDropdownToggle('leftSide', isOpen)}
-        />
-      </View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              alignItems: 'center',
+            }}>
+            <Pressable
+              style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                height: '100%',
+                borderWidth: 1,
+                borderRadius: 10,
+              }}
+              onPress={handlePresentModalPress}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  backgroundColor: 'violet',
+                  marginBottom: 5,
+                }}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>4</Text>
+              </View>
+              <Text>머리 우측</Text>
+            </Pressable>
 
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-        }}>
-        <Text style={{fontSize: 18, fontWeight: 'medium', marginRight: 30}}>
-          우측
-        </Text>
-        <SelectStepModal
-          data={actionStep}
-          selectedStep={rightSide}
-          onSelect={step => handleSelectStep('rightSide', step)}
-          isOpen={openDropdown === 'rightSide'}
-          onToggle={isOpen => handleDropdownToggle('rightSide', isOpen)}
-        />
-      </View>
+            <Pressable
+              style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                height: '100%',
+                borderWidth: 1,
+                borderRadius: 10,
+              }}
+              onPress={handlePresentModalPress}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  backgroundColor: 'violet',
+                  marginBottom: 5,
+                }}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>5</Text>
+              </View>
+              <Text>머리 좌측</Text>
+            </Pressable>
 
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-        }}>
-        <Text style={{fontSize: 18, fontWeight: 'medium', marginRight: 30}}>
-          코좌
-        </Text>
-        <SelectStepModal
-          data={actionStep}
-          selectedStep={leftNose}
-          onSelect={step => handleSelectStep('leftNose', step)}
-          isOpen={openDropdown === 'leftNose'}
-          onToggle={isOpen => handleDropdownToggle('leftNose', isOpen)}
-        />
-      </View>
+            <Pressable
+              style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                height: '100%',
+                borderWidth: 1,
+                borderRadius: 10,
+              }}
+              onPress={handlePresentModalPress}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  backgroundColor: 'violet',
+                  marginBottom: 5,
+                }}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>6</Text>
+              </View>
+              <Text>방향</Text>
+            </Pressable>
+          </View>
+        </View>
 
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-        }}>
-        <Text style={{fontSize: 18, fontWeight: 'medium', marginRight: 30}}>
-          코우
-        </Text>
-        <SelectStepModal
-          data={actionStep}
-          selectedStep={rightNose}
-          onSelect={step => handleSelectStep('rightNose', step)}
-          isOpen={openDropdown === 'rightNose'}
-          onToggle={isOpen => handleDropdownToggle('rightNose', isOpen)}
-        />
-      </View>
-    </View>
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          onChange={handleSheetChanges}
+          index={1}
+          snapPoints={snapPoints}
+          enablePanDownToClose={true}
+          backdropComponent={renderBackdrop}>
+          <BottomSheetView style={{flex: 1}}>
+            <Text>test</Text>
+          </BottomSheetView>
+        </BottomSheetModal>
+      </SafeAreaView>
+    </BottomSheetModalProvider>
   );
 };
 
