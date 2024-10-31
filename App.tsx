@@ -6,14 +6,11 @@
  */
 
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
 import React, {useEffect} from 'react';
 import {Platform} from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {PERMISSIONS, requestMultiple, RESULTS} from 'react-native-permissions';
-import DetailDeviceScreen from './src/screens/DetailDeviceScreen';
-import ScanDeviceScreen from './src/screens/ScanDeviceScreen';
-
-const Stack = createStackNavigator<ROOT_NAVIGATION>();
+import Stacks from './src/navigations/Stacks';
 
 async function requestPermissions() {
   if (Platform.OS === 'ios') {
@@ -68,20 +65,11 @@ function App(): React.JSX.Element {
 
   // View
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="ScanDevice">
-        <Stack.Screen
-          name="ScanDevice"
-          component={ScanDeviceScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="DetailDevice"
-          component={DetailDeviceScreen}
-          options={{headerTitle: '', headerShadowVisible: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <NavigationContainer>
+        <Stacks />
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
 
