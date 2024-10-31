@@ -1,3 +1,4 @@
 export type ActionStepType = {
-  step: number;
+  number: number;
+  title: string;
 };
