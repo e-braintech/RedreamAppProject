@@ -12,12 +12,3 @@ export const decodeFromBase64 = (data: string): string => {
 export const charToDecimal = (char: string) => {
   return char.charCodeAt(0);
 };
-
-// // 특정 위치의 문자를 10진수 ASCII 값으로 변환하는 함수
-// export const getAsciiValue = (decodedValue: string, char: string) => {
-//   const index = decodedValue.indexOf(char);
-//   if (index !== -1) {
-//     return charToDecimal(decodedValue[index]);
-//   }
-//   return null; // 문자가 없을 경우 null 반환
-// };

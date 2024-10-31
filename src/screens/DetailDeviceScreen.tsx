@@ -1,5 +1,5 @@
-import {RouteProp, useRoute} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import {RouteProp, useFocusEffect, useRoute} from '@react-navigation/native';
+import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
 import SelectStepModal from '../components/SelectStepModal';
@@ -139,9 +139,12 @@ const DetailDeviceScreen = ({navigation}: Props) => {
     }
   };
 
-  useEffect(() => {
-    requestBatteryLevel();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      requestBatteryLevel();
+    }, [batteryLevel]),
+  );
+
   // Logic
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
