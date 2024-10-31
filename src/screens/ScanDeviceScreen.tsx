@@ -85,6 +85,25 @@ const ScanDeviceScreen = ({navigation}: Props) => {
     setAppState(nextAppState); // 상태 업데이트
   };
 
+  // 장치 리스트를 RSSI 값 기준으로 정렬
+  const addOrUpdateDevice = (newDevice: Device) => {
+    setDevices(prevDevices => {
+      const existingDeviceIndex = prevDevices.findIndex(
+        d => d.id === newDevice.id,
+      );
+      const updatedDevices =
+        existingDeviceIndex >= 0
+          ? [
+              ...prevDevices.slice(0, existingDeviceIndex),
+              newDevice,
+              ...prevDevices.slice(existingDeviceIndex + 1),
+            ]
+          : [...prevDevices, newDevice];
+
+      return updatedDevices.sort((a, b) => (b.rssi || -100) - (a.rssi || -100)); // RSSI 기준 정렬
+    });
+  };
+
   // 블루투스 장치 스캔 함수 (3초 후 스캔 중지)
   const startDeviceScan = () => {
     if (isScanning) return; // 이미 스캔 중이면 중복 실행 방지
@@ -93,15 +112,8 @@ const ScanDeviceScreen = ({navigation}: Props) => {
     setDevices([]); // 기존 스캔된 기기 목록 초기화
 
     BLEService.scanDevices(device => {
-      // 이름이 존재하는 기기만 필터링
       if (device.name) {
-        setDevices(prevDevices => {
-          // 기기가 중복되지 않도록 필터링
-          if (!prevDevices.find(d => d.id === device.id)) {
-            return [...prevDevices, device];
-          }
-          return prevDevices;
-        });
+        addOrUpdateDevice(device); // 장치 추가 및 정렬
       }
     });
 

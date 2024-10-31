@@ -12,3 +12,14 @@ export const decodeFromBase64 = (data: string): string => {
 export const charToDecimal = (char: string) => {
   return char.charCodeAt(0);
 };
+
+// 거리 측정하는 함수
+export const calculateDistance = (rssi: number | null): string => {
+  if (rssi === null) return 'Unknown';
+
+  const measuredPower = -69; // 기준 RSSI 값
+  const N = 2; // 환경 감쇠 계수
+  const distance = Math.pow(10, (measuredPower - rssi) / (10 * N));
+
+  return `${distance.toFixed(2)} m`;
+};

@@ -1,6 +1,7 @@
 import React from 'react';
 import {Pressable, Text, View} from 'react-native';
 import {Device} from 'react-native-ble-plx';
+import {calculateDistance} from '../utils/common';
 
 interface BluetoothRenderItemProps {
   device: Device;
@@ -17,6 +18,10 @@ const BluetoothRenderItem: React.FC<BluetoothRenderItemProps> = ({
   disconnectFromDevice,
   isConnected,
 }) => {
+  // Logic
+  const distance = calculateDistance(device.rssi);
+
+  // View
   return (
     <View key={index} style={{paddingHorizontal: 15}}>
       <View
@@ -28,6 +33,9 @@ const BluetoothRenderItem: React.FC<BluetoothRenderItemProps> = ({
         <View style={{flex: 8}}>
           <Text style={{marginBottom: 10}}>{device.name}</Text>
           <Text style={{fontSize: 8}}>{device.id}</Text>
+          <Text style={{fontSize: 12, color: 'gray'}}>
+            Distance: {distance}
+          </Text>
         </View>
         <Pressable
           style={{
