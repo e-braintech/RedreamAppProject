@@ -66,35 +66,6 @@ const DetailDeviceScreen = ({navigation}: Props) => {
     [],
   );
 
-  // 드롭다운에서 항목 선택 시 호출되는 함수
-  const handleSelectStep = (part: string, step: number) => {
-    switch (part) {
-      case 'head':
-        setHead(step);
-        break;
-      case 'neck':
-        setNeck(step);
-        break;
-      case 'shoulder':
-        setShoulder(step);
-        break;
-      case 'leftSide':
-        setLeftSide(step);
-        break;
-      case 'rightSide':
-        setRightSide(step);
-        break;
-      case 'leftNose':
-        setLeftNose(step);
-        break;
-      case 'rightNose':
-        setRightNose(step);
-        break;
-      default:
-        console.log(`Unknown part: ${part}`);
-    }
-  };
-
   // 데이터를 블루투스 기기로 보내는 함수
   // const sendDataToDevice = (data: string) => {
   //   try {
@@ -161,197 +132,204 @@ const DetailDeviceScreen = ({navigation}: Props) => {
   // Logic
   return (
     <BottomSheetModalProvider>
-      <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={{fontSize: 32, fontWeight: 'bold', textAlign: 'center'}}>
-            나의 베개 설정
-          </Text>
-        </View>
+      <SafeAreaView style={{flex: 1, backgroundColor: '#5d4dff'}}>
+        <View style={{flex: 1, paddingHorizontal: 30}}>
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={{fontSize: 32, fontWeight: 'bold', color: '#ffffff'}}>
+              나의 베개 설정
+            </Text>
+          </View>
+          <View style={{flex: 1}}>
+            <View
+              style={{width: '100%', height: 200, backgroundColor: 'yellow'}}
+            />
+          </View>
 
-        {/* 각각의 Pressable 컴포넌트에 수동으로 할당 */}
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-evenly',
-            alignItems: 'center',
-            marginBottom: 20,
-          }}>
-          <Pressable
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 10,
-              marginHorizontal: 5,
-              borderWidth: 1,
-              borderRadius: 10,
-            }}
-            onPress={() => handlePresentModalPress(actionStep[0].number)}>
+          <View style={{flex: 1}}>
             <View
               style={{
-                justifyContent: 'center',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
                 alignItems: 'center',
-                width: 30,
-                height: 30,
-                borderRadius: 15,
-                backgroundColor: 'violet',
-                marginBottom: 5,
+                marginBottom: 20,
               }}>
-              <Text style={{color: 'white', fontWeight: 'bold'}}>
-                {actionStep[0].number}
-              </Text>
-            </View>
-            <Text>{actionStep[0].title}</Text>
-          </Pressable>
+              <Pressable
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: 20,
+                  marginHorizontal: 5,
+                  backgroundColor: '#ffffff',
+                  borderRadius: 10,
+                }}
+                onPress={() => handlePresentModalPress(actionStep[0].number)}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 20,
+                    height: 20,
+                    borderRadius: 15,
+                    backgroundColor: 'violet',
+                    marginBottom: 5,
+                  }}>
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                    {actionStep[0].number}
+                  </Text>
+                </View>
+                <Text style={{fontSize: 12}}>{actionStep[0].title}</Text>
+              </Pressable>
 
-          <Pressable
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 10,
-              marginHorizontal: 5,
-              borderWidth: 1,
-              borderRadius: 10,
-            }}
-            onPress={() => handlePresentModalPress(actionStep[1].number)}>
+              <Pressable
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: 20,
+                  marginHorizontal: 5,
+                  backgroundColor: '#ffffff',
+                  borderRadius: 10,
+                }}
+                onPress={() => handlePresentModalPress(actionStep[1].number)}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 20,
+                    height: 20,
+                    borderRadius: 15,
+                    backgroundColor: 'violet',
+                    marginBottom: 5,
+                  }}>
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                    {actionStep[1].number}
+                  </Text>
+                </View>
+                <Text style={{fontSize: 12}}>{actionStep[1].title}</Text>
+              </Pressable>
+
+              <Pressable
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: 20,
+                  marginHorizontal: 5,
+                  backgroundColor: '#ffffff',
+                  borderRadius: 10,
+                }}
+                onPress={() => handlePresentModalPress(actionStep[2].number)}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 20,
+                    height: 20,
+                    borderRadius: 15,
+                    backgroundColor: 'violet',
+                    marginBottom: 5,
+                  }}>
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                    {actionStep[2].number}
+                  </Text>
+                </View>
+                <Text style={{fontSize: 12}}>{actionStep[2].title}</Text>
+              </Pressable>
+            </View>
+
             <View
               style={{
-                justifyContent: 'center',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
                 alignItems: 'center',
-                width: 30,
-                height: 30,
-                borderRadius: 15,
-                backgroundColor: 'violet',
-                marginBottom: 5,
               }}>
-              <Text style={{color: 'white', fontWeight: 'bold'}}>
-                {actionStep[1].number}
-              </Text>
-            </View>
-            <Text>{actionStep[1].title}</Text>
-          </Pressable>
+              <Pressable
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: 20,
+                  marginHorizontal: 5,
+                  backgroundColor: '#ffffff',
+                  borderRadius: 10,
+                }}
+                onPress={() => handlePresentModalPress(actionStep[3].number)}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 20,
+                    height: 20,
+                    borderRadius: 15,
+                    backgroundColor: 'violet',
+                    marginBottom: 5,
+                  }}>
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                    {actionStep[3].number}
+                  </Text>
+                </View>
+                <Text style={{fontSize: 12}}>{actionStep[3].title}</Text>
+              </Pressable>
 
-          <Pressable
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 10,
-              marginHorizontal: 5,
-              borderWidth: 1,
-              borderRadius: 10,
-            }}
-            onPress={() => handlePresentModalPress(actionStep[2].number)}>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: 30,
-                height: 30,
-                borderRadius: 15,
-                backgroundColor: 'violet',
-                marginBottom: 5,
-              }}>
-              <Text style={{color: 'white', fontWeight: 'bold'}}>
-                {actionStep[2].number}
-              </Text>
-            </View>
-            <Text>{actionStep[2].title}</Text>
-          </Pressable>
-        </View>
+              <Pressable
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: 20,
+                  marginHorizontal: 5,
+                  backgroundColor: '#ffffff',
+                  borderRadius: 10,
+                }}
+                onPress={() => handlePresentModalPress(actionStep[4].number)}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 20,
+                    height: 20,
+                    borderRadius: 15,
+                    backgroundColor: 'violet',
+                    marginBottom: 5,
+                  }}>
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                    {actionStep[4].number}
+                  </Text>
+                </View>
+                <Text style={{fontSize: 12}}>{actionStep[4].title}</Text>
+              </Pressable>
 
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-          }}>
-          <Pressable
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 10,
-              marginHorizontal: 5,
-              borderWidth: 1,
-              borderRadius: 10,
-            }}
-            onPress={() => handlePresentModalPress(actionStep[3].number)}>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: 30,
-                height: 30,
-                borderRadius: 15,
-                backgroundColor: 'violet',
-                marginBottom: 5,
-              }}>
-              <Text style={{color: 'white', fontWeight: 'bold'}}>
-                {actionStep[3].number}
-              </Text>
+              <Pressable
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: 20,
+                  marginHorizontal: 5,
+                  backgroundColor: '#ffffff',
+                  borderRadius: 10,
+                }}
+                onPress={() => handlePresentModalPress(actionStep[5].number)}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 20,
+                    height: 20,
+                    borderRadius: 15,
+                    backgroundColor: 'violet',
+                    marginBottom: 5,
+                  }}>
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                    {actionStep[5].number}
+                  </Text>
+                </View>
+                <Text style={{fontSize: 12}}>{actionStep[5].title}</Text>
+              </Pressable>
             </View>
-            <Text>{actionStep[3].title}</Text>
-          </Pressable>
-
-          <Pressable
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 10,
-              marginHorizontal: 5,
-              borderWidth: 1,
-              borderRadius: 10,
-            }}
-            onPress={() => handlePresentModalPress(actionStep[4].number)}>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: 30,
-                height: 30,
-                borderRadius: 15,
-                backgroundColor: 'violet',
-                marginBottom: 5,
-              }}>
-              <Text style={{color: 'white', fontWeight: 'bold'}}>
-                {actionStep[4].number}
-              </Text>
-            </View>
-            <Text>{actionStep[4].title}</Text>
-          </Pressable>
-
-          <Pressable
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 10,
-              marginHorizontal: 5,
-              borderWidth: 1,
-              borderRadius: 10,
-            }}
-            onPress={() => handlePresentModalPress(actionStep[5].number)}>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: 30,
-                height: 30,
-                borderRadius: 15,
-                backgroundColor: 'violet',
-                marginBottom: 5,
-              }}>
-              <Text style={{color: 'white', fontWeight: 'bold'}}>
-                {actionStep[5].number}
-              </Text>
-            </View>
-            <Text>{actionStep[5].title}</Text>
-          </Pressable>
+          </View>
         </View>
 
         <BottomSheetModal
@@ -359,7 +337,8 @@ const DetailDeviceScreen = ({navigation}: Props) => {
           index={1}
           snapPoints={snapPoints}
           enablePanDownToClose={true}
-          backdropComponent={renderBackdrop}>
+          backdropComponent={renderBackdrop}
+          onChange={handleSheetChanges}>
           <BottomSheetView
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             {selectedStep && (
