@@ -8,6 +8,7 @@ import {RouteProp, useFocusEffect, useRoute} from '@react-navigation/native';
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
+import BluetoothBottomSheetControlView from '../components/BluetoothBottomSheetControlView';
 import {BLEService} from '../services/BLEService';
 import {ActionStepType} from '../types/types';
 import {charToDecimal, decodeFromBase64, encodeToBase64} from '../utils/common';
@@ -36,6 +37,7 @@ const DetailDeviceScreen = ({navigation}: Props) => {
   const {deviceId} = route.params; // 전달받은 기기 데이터
 
   const [selectedStep, setSelectedStep] = useState<ActionStepType | null>(null);
+  const [stepLevel, setStepLevel] = useState<number>(0); // 단계 수 상태 추가
   const [batteryLevel, setBatteryLevel] = useState<number | null>(null); // 배터리 레벨을 저장하는 상태
   const [head, setHead] = useState<number | null>(null); // 머리
   const [neck, setNeck] = useState<number | null>(null); // 목
@@ -54,6 +56,7 @@ const DetailDeviceScreen = ({navigation}: Props) => {
     const step = actionStep.find(item => item.number === stepNumber);
     if (step) {
       setSelectedStep(step);
+      setStepLevel(0); // 초기 단계 설정
       bottomSheetModalRef.current?.present();
     }
   }, []);
@@ -339,15 +342,14 @@ const DetailDeviceScreen = ({navigation}: Props) => {
           enablePanDownToClose={true}
           backdropComponent={renderBackdrop}
           onChange={handleSheetChanges}>
-          <BottomSheetView
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <BottomSheetView style={{flex: 1}}>
             {selectedStep && (
-              <View>
-                <Text style={{fontSize: 24, fontWeight: 'bold'}}>
-                  {selectedStep.title}
-                </Text>
-                <Text>설정 번호: {selectedStep.number}</Text>
-              </View>
+              <BluetoothBottomSheetControlView
+                stepNumber={selectedStep.number}
+                title={selectedStep.title}
+                stepLevel={stepLevel}
+                setStepLevel={setStepLevel}
+              />
             )}
           </BottomSheetView>
         </BottomSheetModal>
