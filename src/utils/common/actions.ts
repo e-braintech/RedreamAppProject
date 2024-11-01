@@ -1,43 +1,83 @@
-export const head_up_up: string = 'CSF';
-export const head_up_down: string = 'CS1';
+// 1. 어깨 1단계 요청 값
+export const shoulder_step_1 = 'PA4211%%';
 
-export const head_down_up: string = 'CSF';
-export const head_down_down: string = 'CS2';
+// 1. 어깨 2단계 요청 값
+export const shoulder_step_2 = 'PA4212%%';
 
-export const neck_up_up: string = 'CSF';
-export const neck_up_down: string = 'CS3';
+// 1. 어깨 3단계 요청 값
+export const shoulder_step_3 = 'PA4213%%';
 
-export const neck_down_up: string = 'CSF';
-export const neck_down_down: string = 'CS4';
+// 1. 어깨 4단계 요청 값
+export const shoulder_step_4 = 'PA4214%%';
 
-export const shoulder_up_up: string = 'CSF';
-export const shoulder_up_down: string = 'CS5';
+// 1. 어깨 5단계 요청 값
+export const shoulder_step_5 = 'PA4215%%';
 
-export const shoulder_down_up: string = 'CSF';
-export const shoulder_down_down: string = 'CS6';
+// 2. 목 1단계 요청 값
+export const neck_step_1 = 'PA4221%%';
 
-export const left_up_up: string = 'CSF';
-export const left_up_down: string = 'CS7';
+// 2. 목 2단계 요청 값
+export const neck_step_2 = 'PA4222%%';
 
-export const left_down_up: string = 'CSF';
-export const left_down_down: string = 'CS8';
+// 2. 목 3단계 요청 값
+export const neck_step_3 = 'PA4223%%';
 
-export const right_up_up: string = 'CSF';
-export const right_up_down: string = 'CS9';
+// 2. 목 4단계 요청 값
+export const neck_step_4 = 'PA4224%%';
 
-export const right_down_up: string = 'CSF';
-export const right_down_down: string = 'CSA';
+// 2. 목 5단계 요청 값
+export const neck_step_5 = 'PA4225%%';
 
-export const nose_left_up_up: string = 'CSF';
-export const nose_left_up_down: string = 'CSB';
+// 3. 머리 1단계 요청 값
+export const head_step_1 = 'PA4231%%';
 
-export const nose_left_down_up: string = 'CSF';
-export const nose_left_down_down: string = 'CSC';
+// 3. 머리 2단계 요청 값
+export const head_step_2 = 'PA4232%%';
 
-export const nose_right_up_up: string = 'CSF';
-export const nose_right_up_down: string = 'CSD';
+// 3. 머리 3단계 요청 값
+export const head_step_3 = 'PA4233%%';
 
-export const nose_right_down_up: string = 'CSF';
-export const nose_right_down_down: string = 'CSE';
+// 3. 머리 4단계 요청 값
+export const head_step_4 = 'PA4234%%';
 
+// 3. 머리 5단계 요청 값
+export const head_step_5 = 'PA4235%%';
+
+// 4. 머리 우측 1단계 요청 값
+export const right_head_step_1 = 'PA4241%%';
+
+// 4. 머리 우측 2단계 요청 값
+export const right_head_step_2 = 'PA4242%%';
+
+// 4. 머리 우측 3단계 요청 값
+export const right_head_step_3 = 'PA4243%%';
+
+// 4. 머리 우측 4단계 요청 값
+export const right_head_step_4 = 'PA4244%%';
+
+// 4. 머리 우측 5단계 요청 값
+export const right_head_step_5 = 'PA4245%%';
+
+// 5. 머리 좌측 1단계 요청 값
+export const left_head_step_1 = 'PA4251%%';
+
+// 5. 머리 좌측 2단계 요청 값
+export const left_head_step_2 = 'PA4252%%';
+
+// 5. 머리 좌측 3단계 요청 값
+export const left_head_step_3 = 'PA4253%%';
+
+// 5. 머리 좌측 4단계 요청 값
+export const left_head_step_4 = 'PA4254%%';
+
+// 5. 머리 좌측 5단계 요청 값
+export const left_head_step_5 = 'PA4255%%';
+
+// 6. 향기 on 요청 값
+export const smell_on = 'PA326%';
+
+// 6. 향기 off 요청 값
+export const smell_off = 'PA327%%';
+
+// 배터리 상태 표시 요청 값
 export const batteryValue: string = 'PA3710';

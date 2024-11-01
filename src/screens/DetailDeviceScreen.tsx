@@ -39,14 +39,6 @@ const DetailDeviceScreen = ({navigation}: Props) => {
   const [selectedStep, setSelectedStep] = useState<ActionStepType | null>(null);
   const [stepLevel, setStepLevel] = useState<number>(0); // 단계 수 상태 추가
   const [batteryLevel, setBatteryLevel] = useState<number | null>(null); // 배터리 레벨을 저장하는 상태
-  const [head, setHead] = useState<number | null>(null); // 머리
-  const [neck, setNeck] = useState<number | null>(null); // 목
-  const [shoulder, setShoulder] = useState<number | null>(null); // 어깨
-  const [leftSide, setLeftSide] = useState<number | null>(null); // 좌측
-  const [rightSide, setRightSide] = useState<number | null>(null); // 우측
-  const [leftNose, setLeftNose] = useState<number | null>(null); // 코좌
-  const [rightNose, setRightNose] = useState<number | null>(null); // 코우
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null); // 드롭다운 컴포넌트 open 상태
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -69,24 +61,28 @@ const DetailDeviceScreen = ({navigation}: Props) => {
     [],
   );
 
-  // 데이터를 블루투스 기기로 보내는 함수
-  // const sendDataToDevice = (data: string) => {
-  //   try {
-  //     const base64Data = encodeToBase64(data);
+  const hideBottomSheet = () => {
+    bottomSheetModalRef.current?.close();
+  };
 
-  //     BLEService.manager
-  //       .writeCharacteristicWithResponseForDevice(
-  //         deviceId,
-  //         service_UUID,
-  //         characteristic_UUID,
-  //         base64Data,
-  //       )
-  //       .then(res => console.log('Data sent:', res))
-  //       .catch(err => console.log('Error sending data:', err));
-  //   } catch (error) {
-  //     console.error('Failed to send data:', error);
-  //   }
-  // };
+  // 데이터를 블루투스 기기로 보내는 함수
+  const sendDataToDevice = (data: string) => {
+    try {
+      const base64Data = encodeToBase64(data);
+
+      BLEService.manager
+        .writeCharacteristicWithResponseForDevice(
+          deviceId,
+          service_UUID,
+          characteristic_UUID,
+          base64Data,
+        )
+        .then(res => console.log('Data sent: ', res))
+        .catch(err => console.log('Error sending data:', err));
+    } catch (error) {
+      console.error('Failed to send data:', error);
+    }
+  };
 
   // 배터리 측정 요청을 보내는 함수
   const requestBatteryLevel = async () => {
@@ -349,6 +345,8 @@ const DetailDeviceScreen = ({navigation}: Props) => {
                 title={selectedStep.title}
                 stepLevel={stepLevel}
                 setStepLevel={setStepLevel}
+                sendDataToDevice={sendDataToDevice}
+                hideBottomSheet={hideBottomSheet}
               />
             )}
           </BottomSheetView>
