@@ -77,7 +77,7 @@ const DetailDeviceScreen = ({navigation}: Props) => {
           characteristic_UUID,
           base64Data,
         )
-        .then(res => console.log('Data sent: ', res))
+        .then(res => console.log('Data sent: ', JSON.stringify(res, null, 5)))
         .catch(err => console.log('Error sending data:', err));
     } catch (error) {
       console.error('Failed to send data:', error);
