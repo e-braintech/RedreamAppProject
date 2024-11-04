@@ -49,13 +49,11 @@ const BluetoothBottomSheetControlView: React.FC<
   // 단계 수 증가 함수
   const handleIncrease = () => {
     setStepLevel(prev => (prev < 5 ? prev + 1 : prev));
-    console.log(`단계: ${stepLevel}`);
   };
 
   // 단계 수 감소 함수
   const handleDecrease = () => {
     setStepLevel(prev => (prev > 1 ? prev - 1 : 1));
-    console.log(`단계: ${stepLevel}`);
   };
 
   // 단계별 Bluetooth 데이터 가져오기
