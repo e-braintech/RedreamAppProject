@@ -45,6 +45,7 @@ const BluetoothBottomSheetControlView: React.FC<
 > = ({stepNumber, title, deviceID, hideBottomSheet}) => {
   // Logic
   const [stepLevel, setStepLevel] = useState<number>(1); // 단계 수 상태 추가
+  const [isSmellOn, setIsSmellOn] = useState<boolean>(false); // 향기 상태를 관리하는 상태 변수
 
   // 단계 수 증가 함수
   const handleIncrease = () => {
@@ -122,8 +123,8 @@ const BluetoothBottomSheetControlView: React.FC<
           : stepLevel === 5
           ? left_head_step_5
           : null;
-      case 6: // 향기
-        return stepLevel === 6 ? smell_on : smell_off;
+      case 6: // 방향
+        return isSmellOn ? smell_on : smell_off;
       default:
         return null;
     }
@@ -171,6 +172,14 @@ const BluetoothBottomSheetControlView: React.FC<
     }
   };
 
+  // '켜기' 또는 '끄기' 버튼 클릭 시 데이터를 전송하는 함수
+  const handleSmellToggle = (on: boolean) => {
+    const data = on ? smell_on : smell_off;
+    setIsSmellOn(on); // 상태 업데이트
+    sendDataToDevice(data); // 데이터 전송
+    hideBottomSheet();
+  };
+
   // View
   return (
     <View style={{flex: 1, marginTop: 50, paddingHorizontal: 30}}>
@@ -206,81 +215,111 @@ const BluetoothBottomSheetControlView: React.FC<
         {title}
       </Text>
 
-      <Text
-        style={{
-          fontSize: 16,
-          fontWeight: 'bold',
-          textAlign: 'center',
-          marginBottom: 25,
-        }}>
-        {`${stepLevel}단`}
-      </Text>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: 50,
-        }}>
-        <TouchableOpacity
-          style={{padding: 10, borderWidth: 1, borderRadius: 5}}
-          onPress={handleDecrease}>
-          <Image
-            source={require('../assets/up.png')}
-            style={{width: 24, height: 24}}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{
-            padding: 10,
-            borderWidth: 1,
-            borderRadius: 5,
-          }}
-          onPress={handleIncrease}>
-          <Image
-            source={require('../assets/down.png')}
-            style={{width: 24, height: 24}}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-      </View>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
-        <Pressable
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingVertical: 10,
-            borderWidth: 1,
-            borderRadius: 20,
-            marginRight: 10,
-          }}
-          onPress={hideBottomSheet}>
-          <Text>취소</Text>
-        </Pressable>
-        <Pressable
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginLeft: 10,
-            paddingVertical: 10,
-            borderWidth: 1,
-            borderRadius: 20,
-          }}
-          onPress={handleConfirm}>
-          <Text>확인</Text>
-        </Pressable>
-      </View>
+      {stepNumber > 5 ? (
+        <>
+          <Text style={{fontSize: 16, textAlign: 'center', marginBottom: 25}}>
+            향기 조작
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <Pressable
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                paddingVertical: 10,
+                borderWidth: 1,
+                borderRadius: 20,
+                marginRight: 10,
+              }}
+              onPress={() => handleSmellToggle(false)}>
+              <Text>끄기</Text>
+            </Pressable>
+            <Pressable
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                paddingVertical: 10,
+                borderWidth: 1,
+                borderRadius: 20,
+                marginLeft: 10,
+              }}
+              onPress={() => handleSmellToggle(true)}>
+              <Text>켜기</Text>
+            </Pressable>
+          </View>
+        </>
+      ) : (
+        <>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: 'bold',
+              textAlign: 'center',
+              marginBottom: 25,
+            }}>{`${stepLevel}단`}</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 50,
+            }}>
+            <TouchableOpacity
+              style={{padding: 10, borderWidth: 1, borderRadius: 5}}
+              onPress={handleDecrease}>
+              <Image
+                source={require('../assets/up.png')}
+                style={{width: 24, height: 24}}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{padding: 10, borderWidth: 1, borderRadius: 5}}
+              onPress={handleIncrease}>
+              <Image
+                source={require('../assets/down.png')}
+                style={{width: 24, height: 24}}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <Pressable
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                paddingVertical: 10,
+                borderWidth: 1,
+                borderRadius: 20,
+                marginRight: 10,
+              }}
+              onPress={hideBottomSheet}>
+              <Text>취소</Text>
+            </Pressable>
+            <Pressable
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                paddingVertical: 10,
+                borderWidth: 1,
+                borderRadius: 20,
+                marginLeft: 10,
+              }}
+              onPress={handleConfirm}>
+              <Text>확인</Text>
+            </Pressable>
+          </View>
+        </>
+      )}
     </View>
   );
 };

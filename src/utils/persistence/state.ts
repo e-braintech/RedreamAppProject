@@ -4,5 +4,6 @@ export interface PillowStepState {
   head: number;
   rightHead: number;
   leftHead: number;
+  smell: boolean;
   setStep: (part: string, level: number) => void;
 }

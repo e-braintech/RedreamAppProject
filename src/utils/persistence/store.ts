@@ -7,6 +7,6 @@ const useStepStore = create<PillowStepState>(set => ({
   head: 0,
   rightHead: 0,
   leftHead: 0,
-  smell: 0,
+  smell: false,
   setStep: (part, level) => set(state => ({...state, [part]: level})),
 }));
