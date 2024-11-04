@@ -35,9 +35,7 @@ const DetailDeviceScreen = ({navigation}: Props) => {
 
   const route = useRoute<RouteProp<ROOT_NAVIGATION, 'DetailDevice'>>(); // useRoute로 데이터 접근
   const {deviceId} = route.params; // 전달받은 기기 데이터
-
   const [selectedStep, setSelectedStep] = useState<ActionStepType | null>(null);
-  const [stepLevel, setStepLevel] = useState<number>(0); // 단계 수 상태 추가
   const [batteryLevel, setBatteryLevel] = useState<number | null>(null); // 배터리 레벨을 저장하는 상태
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -48,7 +46,6 @@ const DetailDeviceScreen = ({navigation}: Props) => {
     const step = actionStep.find(item => item.number === stepNumber);
     if (step) {
       setSelectedStep(step);
-      setStepLevel(0); // 초기 단계 설정
       bottomSheetModalRef.current?.present();
     }
   }, []);
@@ -65,25 +62,6 @@ const DetailDeviceScreen = ({navigation}: Props) => {
     bottomSheetModalRef.current?.close();
   };
 
-  // 데이터를 블루투스 기기로 보내는 함수
-  const sendDataToDevice = (data: string) => {
-    try {
-      const base64Data = encodeToBase64(data);
-
-      BLEService.manager
-        .writeCharacteristicWithResponseForDevice(
-          deviceId,
-          service_UUID,
-          characteristic_UUID,
-          base64Data,
-        )
-        .then(res => console.log('Data sent: ', JSON.stringify(res, null, 5)))
-        .catch(err => console.log('Error sending data:', err));
-    } catch (error) {
-      console.error('Failed to send data:', error);
-    }
-  };
-
   // 배터리 측정 요청을 보내는 함수
   const requestBatteryLevel = async () => {
     try {
@@ -98,13 +76,13 @@ const DetailDeviceScreen = ({navigation}: Props) => {
       );
 
       // 배터리 응답 모니터링 설정
-      BLEService.manager.monitorCharacteristicForDevice(
+      await BLEService.manager.monitorCharacteristicForDevice(
         deviceId,
         service_UUID,
         notify_UUID,
         (error, characteristic) => {
           if (error) {
-            console.log('Failed to monitor characteristic:', error);
+            // console.log('Failed to monitor characteristic:', error);
             return;
           }
 
@@ -131,11 +109,11 @@ const DetailDeviceScreen = ({navigation}: Props) => {
   // Logic
   return (
     <BottomSheetModalProvider>
-      <SafeAreaView style={{flex: 1, backgroundColor: '#5d4dff'}}>
+      <SafeAreaView style={{flex: 1, backgroundColor: '#ffffff'}}>
         <View style={{flex: 1, paddingHorizontal: 30}}>
           <View
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text style={{fontSize: 32, fontWeight: 'bold', color: '#ffffff'}}>
+            <Text style={{fontSize: 32, fontWeight: 'bold'}}>
               나의 베개 설정
             </Text>
           </View>
@@ -160,7 +138,7 @@ const DetailDeviceScreen = ({navigation}: Props) => {
                   alignItems: 'center',
                   padding: 20,
                   marginHorizontal: 5,
-                  backgroundColor: '#ffffff',
+                  backgroundColor: 'skyblue',
                   borderRadius: 10,
                 }}
                 onPress={() => handlePresentModalPress(actionStep[0].number)}>
@@ -188,7 +166,7 @@ const DetailDeviceScreen = ({navigation}: Props) => {
                   alignItems: 'center',
                   padding: 20,
                   marginHorizontal: 5,
-                  backgroundColor: '#ffffff',
+                  backgroundColor: 'skyblue',
                   borderRadius: 10,
                 }}
                 onPress={() => handlePresentModalPress(actionStep[1].number)}>
@@ -216,7 +194,7 @@ const DetailDeviceScreen = ({navigation}: Props) => {
                   alignItems: 'center',
                   padding: 20,
                   marginHorizontal: 5,
-                  backgroundColor: '#ffffff',
+                  backgroundColor: 'skyblue',
                   borderRadius: 10,
                 }}
                 onPress={() => handlePresentModalPress(actionStep[2].number)}>
@@ -251,7 +229,7 @@ const DetailDeviceScreen = ({navigation}: Props) => {
                   alignItems: 'center',
                   padding: 20,
                   marginHorizontal: 5,
-                  backgroundColor: '#ffffff',
+                  backgroundColor: 'skyblue',
                   borderRadius: 10,
                 }}
                 onPress={() => handlePresentModalPress(actionStep[3].number)}>
@@ -279,7 +257,7 @@ const DetailDeviceScreen = ({navigation}: Props) => {
                   alignItems: 'center',
                   padding: 20,
                   marginHorizontal: 5,
-                  backgroundColor: '#ffffff',
+                  backgroundColor: 'skyblue',
                   borderRadius: 10,
                 }}
                 onPress={() => handlePresentModalPress(actionStep[4].number)}>
@@ -307,7 +285,7 @@ const DetailDeviceScreen = ({navigation}: Props) => {
                   alignItems: 'center',
                   padding: 20,
                   marginHorizontal: 5,
-                  backgroundColor: '#ffffff',
+                  backgroundColor: 'skyblue',
                   borderRadius: 10,
                 }}
                 onPress={() => handlePresentModalPress(actionStep[5].number)}>
@@ -343,9 +321,7 @@ const DetailDeviceScreen = ({navigation}: Props) => {
               <BluetoothBottomSheetControlView
                 stepNumber={selectedStep.number}
                 title={selectedStep.title}
-                stepLevel={stepLevel}
-                setStepLevel={setStepLevel}
-                sendDataToDevice={sendDataToDevice}
+                deviceID={deviceId}
                 hideBottomSheet={hideBottomSheet}
               />
             )}
