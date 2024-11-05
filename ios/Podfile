@@ -26,7 +26,7 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'RedreamAppProject' do
+target 'ZamDreamProject' do
   config = use_native_modules!
 
   use_react_native!(
@@ -35,7 +35,7 @@ target 'RedreamAppProject' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'RedreamAppProjectTests' do
+  target 'ZamDreamProjectTests' do
     inherit! :complete
     # Pods for testing
   end

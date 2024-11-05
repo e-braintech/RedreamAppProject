@@ -1,4 +1,4 @@
-package com.redreamappproject
+package com.zamdreamproject
 
 import android.app.Application
 import com.facebook.react.PackageList
