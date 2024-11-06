@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, Pressable, Text, TouchableOpacity, View} from 'react-native';
 import {BLEService} from '../services/BLEService';
 import {encodeToBase64} from '../utils/common';
@@ -32,6 +32,8 @@ import {
   smell_on,
 } from '../utils/common/actions';
 import {characteristic_UUID, service_UUID} from '../utils/common/uuids';
+import {loadStepLevel} from '../utils/storage/storage';
+import useStepStore from '../utils/zustand/store';
 
 interface BluetoothBottomSheetControlViewProps {
   stepNumber: number;
@@ -44,6 +46,9 @@ const BluetoothBottomSheetControlView: React.FC<
   BluetoothBottomSheetControlViewProps
 > = ({stepNumber, title, deviceID, hideBottomSheet}) => {
   // Logic
+  const {shoulder, neck, head, rightHead, leftHead, smell, setStep} =
+    useStepStore();
+
   const [stepLevel, setStepLevel] = useState<number>(1); // 단계 수 상태 추가
   const [isSmellOn, setIsSmellOn] = useState<boolean>(false); // 향기 상태를 관리하는 상태 변수
 
@@ -63,7 +68,7 @@ const BluetoothBottomSheetControlView: React.FC<
     stepLevel: number,
   ): string | null => {
     switch (stepNumber) {
-      case 1: // 어깨
+      case 1:
         return stepLevel === 1
           ? shoulder_step_1
           : stepLevel === 2
@@ -72,10 +77,8 @@ const BluetoothBottomSheetControlView: React.FC<
           ? shoulder_step_3
           : stepLevel === 4
           ? shoulder_step_4
-          : stepLevel === 5
-          ? shoulder_step_5
-          : null;
-      case 2: // 목
+          : shoulder_step_5;
+      case 2:
         return stepLevel === 1
           ? neck_step_1
           : stepLevel === 2
@@ -84,10 +87,8 @@ const BluetoothBottomSheetControlView: React.FC<
           ? neck_step_3
           : stepLevel === 4
           ? neck_step_4
-          : stepLevel === 5
-          ? neck_step_5
-          : null;
-      case 3: // 머리
+          : neck_step_5;
+      case 3:
         return stepLevel === 1
           ? head_step_1
           : stepLevel === 2
@@ -96,10 +97,8 @@ const BluetoothBottomSheetControlView: React.FC<
           ? head_step_3
           : stepLevel === 4
           ? head_step_4
-          : stepLevel === 5
-          ? head_step_5
-          : null;
-      case 4: // 머리 우측
+          : head_step_5;
+      case 4:
         return stepLevel === 1
           ? right_head_step_1
           : stepLevel === 2
@@ -108,10 +107,8 @@ const BluetoothBottomSheetControlView: React.FC<
           ? right_head_step_3
           : stepLevel === 4
           ? right_head_step_4
-          : stepLevel === 5
-          ? right_head_step_5
-          : null;
-      case 5: // 머리 좌측
+          : right_head_step_5;
+      case 5:
         return stepLevel === 1
           ? left_head_step_1
           : stepLevel === 2
@@ -120,13 +117,29 @@ const BluetoothBottomSheetControlView: React.FC<
           ? left_head_step_3
           : stepLevel === 4
           ? left_head_step_4
-          : stepLevel === 5
-          ? left_head_step_5
-          : null;
-      case 6: // 방향
+          : left_head_step_5;
+      case 6:
         return isSmellOn ? smell_on : smell_off;
       default:
         return null;
+    }
+  };
+
+  // 부위 이름 반환
+  const getPartName = (stepNumber: number) => {
+    switch (stepNumber) {
+      case 1:
+        return 'shoulder';
+      case 2:
+        return 'neck';
+      case 3:
+        return 'head';
+      case 4:
+        return 'rightHead';
+      case 5:
+        return 'leftHead';
+      default:
+        return '';
     }
   };
 
@@ -165,6 +178,8 @@ const BluetoothBottomSheetControlView: React.FC<
     try {
       if (data) {
         sendDataToDevice(data);
+        const part = getPartName(stepNumber);
+        setStep(part, stepLevel); // 상태 저장
         hideBottomSheet();
       }
     } catch (error) {
@@ -176,9 +191,36 @@ const BluetoothBottomSheetControlView: React.FC<
   const handleSmellToggle = (on: boolean) => {
     const data = on ? smell_on : smell_off;
     setIsSmellOn(on); // 상태 업데이트
+    setStep('smell', on ? 1 : 0);
     sendDataToDevice(data); // 데이터 전송
     hideBottomSheet();
   };
+
+  // useEffect 훅으로 초기 상태 설정
+  useEffect(() => {
+    switch (stepNumber) {
+      case 1:
+        setStepLevel(loadStepLevel('shoulder'));
+        break;
+      case 2:
+        setStepLevel(loadStepLevel('neck'));
+        break;
+      case 3:
+        setStepLevel(loadStepLevel('head'));
+        break;
+      case 4:
+        setStepLevel(loadStepLevel('rightHead'));
+        break;
+      case 5:
+        setStepLevel(loadStepLevel('leftHead'));
+        break;
+      case 6:
+        setIsSmellOn(loadStepLevel('smell') === 1);
+        break;
+      default:
+        setStepLevel(1);
+    }
+  }, [stepNumber]);
 
   // View
   return (
