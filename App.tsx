@@ -85,6 +85,3 @@ function App(): React.JSX.Element {
 }
 
 export default App;
-function logAllStepLevels() {
-  throw new Error('Function not implemented.');
-}
