@@ -113,6 +113,9 @@ const DetailDeviceScreen = ({navigation}: Props) => {
         <View style={{flex: 1, paddingHorizontal: 30}}>
           <View
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={{fontSize: 24, fontWeight: 'bold', marginBottom: 30}}>
+              배터리: {batteryLevel}
+            </Text>
             <Text style={{fontSize: 32, fontWeight: 'bold'}}>
               나의 베개 설정
             </Text>
