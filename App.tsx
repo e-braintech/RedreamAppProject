@@ -11,6 +11,7 @@ import {Platform} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {PERMISSIONS, requestMultiple, RESULTS} from 'react-native-permissions';
 import Stacks from './src/navigations/Stacks';
+import {loadStepLevel} from './src/utils/storage/storage';
 
 async function requestPermissions() {
   if (Platform.OS === 'ios') {
@@ -56,11 +57,21 @@ async function requestPermissions() {
   }
 }
 
+// 저장된 단계값 불러오기 함수
+function logStepLevels() {
+  const parts = ['shoulder', 'neck', 'head', 'rightHead', 'leftHead', 'smell'];
+  parts.forEach(part => {
+    const level = loadStepLevel(part);
+    return console.log(`${part}: ${level}`);
+  });
+}
+
 function App(): React.JSX.Element {
   // Logic
 
   useEffect(() => {
     requestPermissions();
+    logStepLevels();
   }, []);
 
   // View
@@ -74,3 +85,6 @@ function App(): React.JSX.Element {
 }
 
 export default App;
+function logAllStepLevels() {
+  throw new Error('Function not implemented.');
+}
