@@ -9,6 +9,7 @@ import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
 import BluetoothBottomSheetControlView from '../components/BluetoothBottomSheetControlView';
+import {useBottomSheetBackHandler} from '../hooks/useBottomSheetBackHandler';
 import {BLEService} from '../services/BLEService';
 import {ActionStepType} from '../types/types';
 import {charToDecimal, decodeFromBase64, encodeToBase64} from '../utils/common';
@@ -42,15 +43,15 @@ const DetailDeviceScreen = ({navigation}: Props) => {
 
   const snapPoints = useMemo(() => ['20%', '50%'], []);
 
+  const {handleSheetPositionChange} =
+    useBottomSheetBackHandler(bottomSheetModalRef);
+
   const handlePresentModalPress = useCallback((stepNumber: number) => {
     const step = actionStep.find(item => item.number === stepNumber);
     if (step) {
       setSelectedStep(step);
       bottomSheetModalRef.current?.present();
     }
-  }, []);
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
   }, []);
 
   const renderBackdrop = useCallback(
@@ -318,7 +319,7 @@ const DetailDeviceScreen = ({navigation}: Props) => {
           snapPoints={snapPoints}
           enablePanDownToClose={true}
           backdropComponent={renderBackdrop}
-          onChange={handleSheetChanges}>
+          onChange={handleSheetPositionChange}>
           <BottomSheetView style={{flex: 1}}>
             {selectedStep && (
               <BluetoothBottomSheetControlView
