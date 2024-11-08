@@ -9,16 +9,12 @@ import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {NativeStackScreenProps} from 'react-native-screens/lib/typescript/native-stack/types';
 import BluetoothBottomSheetControlView from '../components/BluetoothBottomSheetControlView';
+import {batteryValue} from '../data/actions';
+import {characteristic_UUID, notify_UUID, service_UUID} from '../data/uuids';
 import {useBottomSheetBackHandler} from '../hooks/useBottomSheetBackHandler';
 import {BLEService} from '../services/BLEService';
 import {ActionStepType} from '../types/types';
 import {charToDecimal, decodeFromBase64, encodeToBase64} from '../utils/common';
-import {batteryValue} from '../utils/common/actions';
-import {
-  characteristic_UUID,
-  notify_UUID,
-  service_UUID,
-} from '../utils/common/uuids';
 
 type Props = NativeStackScreenProps<ROOT_NAVIGATION, 'DetailDevice'>;
 

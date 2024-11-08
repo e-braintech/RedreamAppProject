@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Image, Pressable, Text, TouchableOpacity, View} from 'react-native';
-import {BLEService} from '../services/BLEService';
-import {encodeToBase64} from '../utils/common';
 import {
   head_step_1,
   head_step_2,
@@ -30,8 +28,10 @@ import {
   shoulder_step_5,
   smell_off,
   smell_on,
-} from '../utils/common/actions';
-import {characteristic_UUID, service_UUID} from '../utils/common/uuids';
+} from '../data/actions';
+import {characteristic_UUID, service_UUID} from '../data/uuids';
+import {BLEService} from '../services/BLEService';
+import {encodeToBase64} from '../utils/common';
 import {loadStepLevel} from '../utils/storage/storage';
 import useStepStore from '../utils/zustand/store';
 
